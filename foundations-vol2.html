@@ -462,24 +462,23 @@
     .btn { padding: 10px 16px; font-size: 13px; }
   }
 </style>
+</head>
+<body>
 <script>
 (function(){
   var PASS = 'futurerays';
-  var KEY = 'fr_oci_v2_auth';
+  var KEY = 'oci_quiz_auth';
   if(sessionStorage.getItem(KEY) !== '1'){
     var ok = false;
     while(!ok){
-      var input = window.prompt('\uD83D\uDD10 FutureRays社内用\nパスワードを入力してください');
-      if(input === null){ document.body.innerHTML='<h2 style=text-align:center;margin-top:40vh>アクセスが拒否されました</h2>'; break; }
+      var input = prompt('🔐 FutureRays社内用\nパスワードを入力してください');
+      if(input === null){ document.body.innerHTML=''; break; }
       if(input === PASS){ sessionStorage.setItem(KEY,'1'); ok=true; }
-      else{ window.alert('パスワードが違います。再入力してください。'); }
+      else{ alert('パスワードが違います'); }
     }
   }
 })();
 </script>
-</head>
-<body>
-
 
 <div class="header">
   <div class="header-left">
