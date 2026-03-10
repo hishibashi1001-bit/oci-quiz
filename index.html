@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCI 認定試験 模擬問題集 Vol.2</title>
+<meta name="description" content="Oracle Cloud Infrastructure 認定試験対策 模擬問題集。Foundations・Architect Associate の第2弾問題集。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&family=JetBrains+Mono:wght@600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #1F3864;
+    --red:  #CC0000;
+    --white: #FFFFFF;
+    --gray: #F4F5F7;
+    --mid:  #6B7280;
+    --border: #E5E7EB;
+    --shadow: 0 4px 24px rgba(31,56,100,.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--gray);
+    color: #111;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--navy);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .logo {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 18px;
+    color: var(--red);
+    letter-spacing: -.5px;
+  }
+  .logo span { color: var(--white); }
+  .header-badge {
+    background: rgba(255,255,255,.12);
+    color: rgba(255,255,255,.75);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    letter-spacing: .5px;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #2d4f9e 100%);
+    color: var(--white);
+    padding: 56px 24px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-eyebrow {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.6);
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: clamp(22px, 5vw, 36px);
+    font-weight: 900;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    position: relative;
+  }
+  .hero h1 .vol {
+    font-family: 'JetBrains Mono', monospace;
+    color: #FFD700;
+    font-size: .7em;
+    margin-left: 8px;
+  }
+  .hero p {
+    font-size: 14px;
+    color: rgba(255,255,255,.75);
+    line-height: 1.7;
+    position: relative;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-top: 32px;
+    position: relative;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 28px;
+    font-weight: 600;
+    color: #FFD700;
+    display: block;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: rgba(255,255,255,.6);
+    margin-top: 2px;
+  }
+
+  /* ── Cards ── */
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+  }
+  .section-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--mid);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-bottom: 48px;
+  }
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform .2s, box-shadow .2s;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(31,56,100,.18);
+  }
+  .card-stripe {
+    height: 6px;
+    background: var(--navy);
+  }
+  .card-stripe.red { background: var(--red); }
+  .card-body {
+    padding: 24px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-icon {
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  .card-exam {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--mid);
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+  .card-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: var(--navy);
+    line-height: 1.3;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--mid);
+    line-height: 1.6;
+    flex: 1;
+    margin-bottom: 16px;
+  }
+  .card-meta {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .chip {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--gray);
+    color: var(--navy);
+  }
+  .chip.green { background: #ECFDF5; color: #065F46; }
+  .chip.blue  { background: #EFF6FF; color: #1D4ED8; }
+  .card-cta {
+    margin-top: 20px;
+    background: var(--navy);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    transition: background .15s;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .card-cta:hover { background: #2d4f9e; }
+  .card-cta.red-btn { background: var(--red); }
+  .card-cta.red-btn:hover { background: #a80000; }
+
+  /* ── Vol.1 section ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 8px 0 32px;
+  }
+  .vol1-cards .card {
+    opacity: .85;
+  }
+  .vol1-badge {
+    display: inline-block;
+    background: var(--gray);
+    border: 1px solid var(--border);
+    color: var(--mid);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 6px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    background: var(--navy);
+    color: rgba(255,255,255,.5);
+    text-align: center;
+    font-size: 12px;
+    padding: 20px;
+    line-height: 1.8;
+  }
+  footer a { color: rgba(255,255,255,.7); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">FR<span>｜OCI Quiz</span></div>
+  <div class="header-badge">石橋 英樹 / FutureRays</div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Oracle Cloud Infrastructure 試験対策</div>
+  <h1>OCI 模擬問題集 <span class="vol">Vol.2</span></h1>
+  <p>Foundations・Architect Associate の第2弾問題集<br>本番試験の出題傾向に沿った実践的な問題を収録</p>
+  <div class="hero-stats">
+    <div class="stat">
+      <span class="stat-num">55</span>
+      <span class="stat-label">新規問題数</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">2</span>
+      <span class="stat-label">試験レベル</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">ブラウザ完結</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">▶ Vol.2 — 新着問題</div>
+  <div class="cards">
+    <a class="card" href="foundations-vol2.html">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-icon">🏗️</div>
+        <div class="card-exam">1Z0-1085-25</div>
+        <div class="card-title">OCI Foundations<br>Vol.2</div>
+        <div class="card-desc">ネットワーク・セキュリティ・IAM・ストレージ・ガバナンスを強化。サービス・ゲートウェイ・VCNピアリング・Bastion・SCIM等の応用問題を収録。</div>
+        <div class="card-meta">
+          <span class="chip green">30問</span>
+          <span class="chip blue">NEW</span>
+        </div>
+        <div class="card-cta">問題を解く →</div>
+      </div>
+    </a>
+    <a class="card" href="architect-vol2.html">
+      <div class="card-stripe red"></div>
+      <div class="card-body">
+        <div class="card-icon">☁️</div>
+        <div class="card-exam">1Z0-1072-25</div>
+        <div class="card-title">OCI Architect Associate<br>Vol.2</div>
+        <div class="card-desc">LB・FastConnect・DRG v2・Block Volume パフォーマンス・OKE・Functions・Resource Manager等のアーキテクト必須問題を収録。</div>
+        <div class="card-meta">
+          <span class="chip green">25問</span>
+          <span class="chip blue">NEW</span>
+        </div>
+        <div class="card-cta red-btn">問題を解く →</div>
+      </div>
+    </a>
+  </div>
+
+  <div class="divider"></div>
+  <div class="section-title">◎ Vol.1 — 既存問題</div>
+  <div class="cards vol1-cards">
+    <a class="card" href="https://hishibashi1001-bit.github.io/oci-quiz/foundations-vol1.html" target="_blank" rel="noopener">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="vol1-badge">Vol.1</div>
+        <div class="card-exam">1Z0-1085-25</div>
+        <div class="card-title">OCI Foundations Vol.1</div>
+        <div class="card-desc">アーキテクチャ・IAM・ネットワーク・コンピュート・ストレージ・セキュリティ・ガバナンスの基礎30問。</div>
+        <div class="card-meta">
+          <span class="chip">30問</span>
+        </div>
+        <div class="card-cta">Vol.1を解く →</div>
+      </div>
+    </a>
+    <a class="card" href="https://hishibashi1001-bit.github.io/oci-quiz/architect-vol1.html" target="_blank" rel="noopener">
+      <div class="card-stripe red"></div>
+      <div class="card-body">
+        <div class="vol1-badge">Vol.1</div>
+        <div class="card-exam">1Z0-1072-25</div>
+        <div class="card-title">OCI Architect Associate Vol.1</div>
+        <div class="card-desc">IAM・ネットワーク・コンピュート・ストレージの基礎33問。公式模擬問題集をベースに作成。</div>
+        <div class="card-meta">
+          <span class="chip">33問</span>
+        </div>
+        <div class="card-cta red-btn">Vol.1を解く →</div>
+      </div>
+    </a>
+  </div>
+
+</div>
+
+<footer>
+  OCI 模擬問題集 Vol.2 ／ 石橋 英樹（FutureRays）<br>
+  OCI12冠・AWS4冠保有 ／ インフラエンジニア<br>
+  <a href="https://github.com/hishibashi1001-bit/oci-quiz" target="_blank">GitHub</a>
+  ・本問題集は学習目的で作成されています。Oracle 公式コンテンツとは異なる場合があります。
+</footer>
+
+</body>
+</html>
