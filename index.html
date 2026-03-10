@@ -246,64 +246,6 @@
 </style>
 
 
-<script>
-(function(){
-  var PASS = 'futurerays';
-  var KEY = 'fr_oci_v3_' + location.pathname;
-  if(sessionStorage.getItem(KEY) === '1') return;
-
-  // ページ全体を隠す
-  document.documentElement.style.display = 'none';
-
-  // 認証オーバーレイをDOMContentLoaded後に表示
-  document.addEventListener('DOMContentLoaded', function(){
-    document.documentElement.style.display = '';
-
-    var overlay = document.createElement('div');
-    overlay.id = 'auth-overlay';
-    overlay.style.cssText = [
-      'position:fixed','top:0','left:0','width:100%','height:100%',
-      'background:#1F3864','display:flex','align-items:center',
-      'justify-content:center','z-index:99999','flex-direction:column',
-      'font-family:Noto Sans JP,sans-serif'
-    ].join(';');
-
-    overlay.innerHTML = [
-      '<div style="background:#fff;border-radius:16px;padding:40px;width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3)">',
-      '<div style="font-size:36px;margin-bottom:8px">🔐</div>',
-      '<div style="font-size:18px;font-weight:900;color:#1F3864;margin-bottom:4px">FutureRays社内用</div>',
-      '<div style="font-size:13px;color:#6B7280;margin-bottom:24px">パスワードを入力してください</div>',
-      '<input id="auth-input" type="password" placeholder="パスワード"',
-      ' style="width:100%;padding:12px;border:2px solid #E5E7EB;border-radius:8px;font-size:15px;box-sizing:border-box;outline:none;margin-bottom:8px">',
-      '<div id="auth-error" style="color:#CC0000;font-size:12px;min-height:18px;margin-bottom:8px"></div>',
-      '<button id="auth-btn"',
-      ' style="width:100%;padding:12px;background:#1F3864;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer">',
-      '入力する</button>',
-      '</div>'
-    ].join('');
-
-    document.body.appendChild(overlay);
-
-    function tryAuth(){
-      var val = document.getElementById('auth-input').value;
-      if(val === PASS){
-        sessionStorage.setItem(KEY,'1');
-        overlay.remove();
-      } else {
-        document.getElementById('auth-error').textContent = 'パスワードが違います';
-        document.getElementById('auth-input').value = '';
-        document.getElementById('auth-input').focus();
-      }
-    }
-
-    document.getElementById('auth-btn').addEventListener('click', tryAuth);
-    document.getElementById('auth-input').addEventListener('keydown', function(e){
-      if(e.key === 'Enter') tryAuth();
-    });
-    setTimeout(function(){ document.getElementById('auth-input').focus(); }, 100);
-  });
-})();
-</script>
 </head>
 <body>
 
@@ -368,6 +310,33 @@
   </div>
 
   
+
+  <div class="divider"></div>
+  <div class="section-title">◎ Vol.1 — 既存問題</div>
+  <div class="cards">
+    <a class="card" href="foundations-vol1.html">
+      <div class="card-stripe"></div>
+      <div class="card-body">
+        <div class="card-icon">🏗️</div>
+        <div class="card-exam">1Z0-1085-25</div>
+        <div class="card-title">OCI Foundations<br>Vol.1</div>
+        <div class="card-desc">アーキテクチャ・IAM・ネットワーク・コンピュート・ストレージ・セキュリティ・ガバナンスの基礎30問。</div>
+        <div class="card-meta"><span class="chip">30問</span></div>
+        <div class="card-cta">問題を解く →</div>
+      </div>
+    </a>
+    <a class="card" href="architect-vol1.html">
+      <div class="card-stripe red"></div>
+      <div class="card-body">
+        <div class="card-icon">☁️</div>
+        <div class="card-exam">1Z0-1072-25</div>
+        <div class="card-title">OCI Architect Associate<br>Vol.1</div>
+        <div class="card-desc">IAM・ネットワーク・コンピュート・ストレージの基礎33問。公式模擬問題集をベースに作成。</div>
+        <div class="card-meta"><span class="chip">33問</span></div>
+        <div class="card-cta red-btn">問題を解く →</div>
+      </div>
+    </a>
+  </div>
 
 </div>
 

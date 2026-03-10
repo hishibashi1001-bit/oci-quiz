@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCI Architect Associate 1Z0-1072 模擬問題</title>
+<style>
+  :root {
+    --red:   #CC0000;
+    --navy:  #1F3864;
+    --white: #FFFFFF;
+    --bg:    #F5F6FA;
+    --card:  #FFFFFF;
+    --text:  #1A1A2E;
+    --sub:   #555577;
+    --border:#D0D5DD;
+    --green: #1A7A3A;
+    --amber: #C8680A;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Meiryo UI", "Yu Gothic UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--navy);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo {
+    color: var(--red);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  .header-title {
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .badge-cat {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .progress-text {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main { max-width: 860px; margin: 0 auto; padding: 20px 16px 80px; }
+
+  /* ===== START SCREEN ===== */
+  .start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    text-align: center;
+  }
+  .start-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+  .start-screen h1 {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .start-screen p {
+    color: var(--sub);
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+  .cat-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .cat-card:hover, .cat-card.selected {
+    border-color: var(--red);
+    background: #FFF5F5;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .cat-card.selected { border-width: 2px; }
+  .cat-card .cat-icon { font-size: 26px; margin-bottom: 6px; }
+  .cat-card .cat-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .cat-card .cat-count { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+  .mode-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .mode-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--sub);
+  }
+  .mode-btn:hover, .mode-btn.selected {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .prog-bar-wrap {
+    background: #E0E4F0;
+    border-radius: 4px;
+    height: 5px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .prog-bar-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 28px 28px 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .q-num {
+    background: var(--red);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .q-cat-tag {
+    background: #EEF1FB;
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .q-select-hint {
+    font-size: 11px;
+    color: var(--amber);
+    font-weight: 700;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .q-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 22px;
+    white-space: pre-wrap;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.12s;
+    background: var(--card);
+    text-align: left;
+    width: 100%;
+  }
+  .opt:hover:not(:disabled) {
+    border-color: var(--navy);
+    background: #F0F3FF;
+  }
+  .opt:disabled { cursor: default; }
+  .opt-key {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sub);
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+  .opt-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    padding-top: 3px;
+  }
+  /* selected (before answer) */
+  .opt.checked {
+    border-color: var(--navy);
+    background: #EEF2FF;
+  }
+  .opt.checked .opt-key {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+  }
+  /* correct */
+  .opt.correct {
+    border-color: var(--green);
+    background: #EDFAF0;
+  }
+  .opt.correct .opt-key {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--white);
+  }
+  /* wrong */
+  .opt.wrong {
+    border-color: var(--red);
+    background: #FFF0F0;
+  }
+  .opt.wrong .opt-key {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+  }
+  /* correct answer highlight (when user was wrong) */
+  .opt.answer-highlight {
+    border-color: var(--green);
+    background: #EDFAF0;
+    border-style: dashed;
+  }
+  .opt.answer-highlight .opt-key {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--white);
+  }
+
+  /* ===== EXPLANATION ===== */
+  .explanation {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--navy);
+    background: #F0F3FF;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--sub);
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--navy); display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ===== RESULT BADGE ===== */
+  .result-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .result-badge.show { display: flex; }
+  .result-badge.ok { background: #EDFAF0; color: var(--green); }
+  .result-badge.ng { background: #FFF0F0; color: var(--red); }
+
+  /* ===== ACTION BUTTONS ===== */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: #AA0000; transform: translateY(-1px); }
+  .btn-primary:disabled { background: #CCC; cursor: default; transform: none; }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--navy);
+    border: 2px solid var(--navy);
+  }
+  .btn-secondary:hover { background: var(--navy); color: var(--white); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--sub);
+    border: 2px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--sub); }
+
+  /* ===== SCORE SCREEN ===== */
+  .score-screen {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .score-ring {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 8px solid var(--border);
+    position: relative;
+  }
+  .score-ring.pass { border-color: var(--green); }
+  .score-ring.fail { border-color: var(--red); }
+  .score-pct {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .score-ring.pass .score-pct { color: var(--green); }
+  .score-ring.fail .score-pct { color: var(--red); }
+  .score-label { font-size: 12px; color: var(--sub); margin-top: 2px; }
+  .score-screen h2 { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .score-screen p { font-size: 14px; color: var(--sub); margin-bottom: 24px; line-height: 1.6; }
+  .cat-scores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 20px 0 28px;
+  }
+  .cat-score-card {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+  .cat-score-card .cat-s-name { font-size: 12px; color: var(--sub); font-weight: 700; margin-bottom: 4px; }
+  .cat-score-card .cat-s-val { font-size: 20px; font-weight: 900; color: var(--navy); }
+  .cat-score-card .cat-s-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .cat-score-card .cat-s-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+
+  .wrong-list { text-align: left; margin-top: 16px; }
+  .wrong-list h3 { font-size: 14px; color: var(--red); margin-bottom: 10px; font-weight: 700; }
+  .wrong-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #FFF0F0;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .wrong-item .wi-num { font-weight: 700; color: var(--red); min-width: 28px; }
+  .wrong-item .wi-q { color: var(--text); flex: 1; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .q-card { padding: 18px 16px; }
+    .q-text { font-size: 14px; }
+    .opt-text { font-size: 13px; }
+    .score-screen { padding: 28px 18px; }
+    .btn { padding: 10px 16px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="header-logo">FR</span>
+    <span class="header-title">OCI Architect Associate 模擬問題</span>
+  </div>
+  <div class="header-right">
+    <span class="badge-cat" id="headerCat">1Z0-1072-25</span>
+    <span class="progress-text" id="headerProg"></span>
+  </div>
+</div>
+
+<div class="main" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== QUIZ DATA =====
+const QUESTIONS = [{"id": 1, "question": "Identity and Access Management(IAM) に関する正しい説明はどれですか？（3 つ選択）", "options": {"A": "ユーザー、グループ、ポリシーなどのコンポーネントを構成して OCIへの認証と OCIリソース へのアクセスの認可を行うことができる。", "B": "ポリシーをユーザーに適用するには、ユーザーは 1つ以上のグループに所属している必要 がある。", "C": "コンパートメントは階層構造にできるが、ポリシーはルート・コンパートメントにのみ設定され 継承される。", "D": "ポリシーで使用する動詞には inspect, read, write, manage, execute などがある。", "E": "ネットワーク・ソースとポリシーを使用して、オブジェクト・ストレージ・バケットへのアクセスを 特定の IP範囲からのみに制限できる。", "F": "OCI の各種構成を APIエンドポイント経由で行うためにはユーザーの認証オプションとして SSH鍵ペアを使用する必要がある。"}, "answer": ["A", "B", "E"], "explanation": "ポリシーの設定方法、基本構文について押さえておきましょう。また、アイデンティティ・ドメイン対応の ために拡張されているので、記述方法も押さえておきましょう（後述）。実際にポリシーを設定する際に は、「最小権限の原則」に 従い、必要なユーザに必要最小限の権限セットを提供するようにし、余分な 権限を与えないように注意が必要です。 A) 正解です。 そのほかにも「動的グループ」や「コンパートメント」、「ネットワーク・ソース」などが あります。 グループは、ユーザ・プリンシパル（主体）を纏めます。動的グループは、インスタン ス（仮想マシンなど）プリンシパル を纏めます。ポリシー で権限を定義し 、グループ /動的グル ープとコンパートメントを結びつけます。 インスタンス・プリンシパルを上手く利用することで、 APIキーや認証トークンを発行する必要がなくなります。 B) 正解です。 ポリシー内ではユーザーを直接指定することができないので、グループに所属し ていないユーザーには OCIリソースへのアクセスを許可できません。", "category": "IAM"}, {"id": 2, "question": "OCIにプロビジョニングした際にデフォルトで設定されている IAMアイデンティティ・ドメイン・タイプは、 どれですか？ (1つ選択 )", "options": {"A": "External User （外部ユーザー）", "B": "Oracle Apps Premium", "C": "Premium（プレミアム）", "D": "Free（フリー）"}, "answer": ["D"], "explanation": "IAMには、様々な組織のニーズに対応するために 5つの異なるアイデンティティ・ドメイン・タイプがあり ます。 (OCIのインターフェースには 4種類が表示されます。 ) 従来、 IDCSとOCI IAM の2つの認証基 盤がありましたが 、Identity Domain に統合され ました。これにより、 有償の IDCSの機能の一部が OCI で使えるようになりました。 例えば、 OCIテナントを作成したときには、無料のアイデンティティ・ドメイン （Free)が自動的にプロビジョニングされます。このドメイン・タイプでは、 IAMサービスを使用して、 OCI インフラストラクチャおよびプラットフォーム・リソースへのアクセスを管理できます。 また、 Premium（プレミアム） アイデンティティ・ドメイン は、従業員やワークフォースのユースケースに最 適なIAM機能セットと最高レベルの制限を提供し、ハイブリッド IT環境全体にわたるエンタープライズ 対応のアクセス管理を実現します。サポートされているすべての統合タイプと無制限の サードパーティ・ アプリケーション が含まれています。 Cop", "category": "IAM"}, {"id": 3, "question": "Oracle Cloud Infrastructure (OCI) Identity and Access Management (IAM) で、無効なポリシーはどれで すか？ (1つ選択)", "options": {"A": "Allow any -user to inspect users in tenancy", "B": "Allow all -groups to inspect users in tenancy", "C": "Allow group ‘Default ’/’A-Admins ’ to manage all -resources in compartment Dev", "D": "Allow dynamic -group ‘Default ’/’FrontEnd ’ to manage instance-family in compartment Dev"}, "answer": ["B"], "explanation": "無効な(正しくない )ポリシーを選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 A) 誤り(内容は正しい )です。 B) 正解(内容は誤り )です。 all-group sという文は存在しません。 C) 誤り(内容は正しい )です。 D) 誤り(内容は正しい )です。 ポリシー構文 は以下のようになっています。 Allow <subject> to <verb> <resource-type> in <location> where <conditions> <subject>には、以下の記述を置くことが出来ます。 group <group_name> | group id <group_ocid> | dynamic -group <dynamic-group_name> | dynamic -group id<dynamic -group_ocid> | any-user ポリシーの仕組み については、以下のドキュメントも参考にしてください。 https://docs.oracle.com/ja -jp/iaas/Content/Identity/Concepts/po", "category": "IAM"}, {"id": 4, "question": "VCNに関する説明のうち正しいものはどれですか？（3 つ選択）", "options": {"A": "10.0.0.0/8 という CIDR範囲を指定できる", "B": "最大で 5つの IPv4 CIDR ブロックを割り当てることが出来る", "C": "VCNの削除時に、サブネットにコンピュート・インスタンスなどのリソースが含まれていると削 除に失敗する", "D": "複数のリージョンを横断して構成できる", "E": "VCN作成時にデフォルトで DHCPオプション、セキュリティ・リスト、ルート表が作成される", "F": "2つのVCNのCIDRブロックに重複があっても、ピアリングにより相互接続することができる   G) VCNのCIDRブロックが重複していても、 DRGを使用すれば、各 VCN内のインスタンスは相 互に通信することが出来る"}, "answer": ["B", "C", "E"], "explanation": "A) 誤りです。 VCN作成時に入力可能な CIDR範囲は /16～/30 までです。 B) 正解です。 その通りです。これは、 OCIの管理画面上にも記述されており、 5つまで設定でき るような UIデザインになっています。 ※現在は 16に拡張されています。 (2025/11 より) C) 正解です。 VCNの削除により、通常は関連リソースのサブネットも自動的に削除されます が、サブネットにリソースが含まれる場合は、サブネットの削除に失敗するため、結果的に VCNの削除も失敗します。 D) 誤りです。 VCNはリージョナル・リソース （リージョン内のリソース ）です。 VCNは複数のリージ ョンを横断して（またがって）構成することはできません。 E) 正解です。 これらのデフォルトのリソース( 名前の先頭に Default と付いている )は、単独で 削 除することができません。 これらのリソースは、 VCNを削除すると、一緒に削除されます。 デ フォルトの DHCPオプションには DNSタイプとして「インターネットおよび VCNリゾルバ」が選", "category": "ネットワーク"}, {"id": 5, "question": "Oracle Cloud Infrastructure Virtual Cloud Network(VCN) の有効なアプローチではないものはどれです か？ (1つ選択)", "options": {"A": "プライベート・サブネットは、 VCN内外のトラフィックの流れを制御するために、個別のルート・ テーブルを持つことが推奨される。", "B": "OCIタグを使用して VCNリソースにタグ付けし、すべてのリソースが組織のタグ付け /命名規 則に従うようにする。", "C": "VCN CIDR 接頭辞がテナンシ内の他の VCNまたは組織のプライベート IPネットワーク範囲 と重複していることを確認します。", "D": "VCNまたはサブネット内ですべての IPアドレスが一度に割り当てられないようにし、代わり に将来の使用のためにいくつかの IPアドレスを確保するように計画する。"}, "answer": ["C"], "explanation": "有効なアプローチで はない（正しくない） ものを選ぶ問題です。有効なアプローチを選ばないように注意 しましょう。 A) 誤り(内容は正しい )です。一般的に、パブリック・サブネットと プライベート・サブネット では、ル ーティングが異なります。プライベート・サブネット専用の個別のルート・テーブルを 作成し、プ ライベート・サブネットに関連付けると良いでしょう。 B) 誤り(内容は正しい )です。 OCIタグを使用 することで リソースにタグ付け することが出来ます。 組織命名規則に従うように 作成しておくことで、後でリソースの検索が容易になります。 C) 正解(内容は誤り )です。 VCN のCIDRは他のネットワークと 重複してはいけません。 作成時 には、重複していないことを確認します。 細かくは、 VCNのCIDRブロック範囲が重複してい ても、 VCN自体は作成できますが、後で、 CIDRが重複している 他のVCNやネットワーク同 士をピアリングで接続することはできません。 (アドレスのレンジがかぶってしまい、ルーティン グができないため。 ) D) 誤り(内容は正しい )です", "category": "ネットワーク"}, {"id": 6, "question": "VCNのサブネットに関する説明のうち正しいものはどれですか？（ 2つ選択 )", "options": {"A": "1つのサブネットに関連付けられるセキュリティ・リストは 5つまで", "B": "サブネット内のインスタンスをインターネットに接続させるには、インターネット・ゲートウェイも しくは NATゲートウェイへのルート・ルールを含めたルート表をサブネットに紐づけ、適切な セキュリティ・ルールをもつセキュリティ・リストも紐づける", "C": "複数の VCNを横断するサブネットを作成することもできる", "D": "1つの可用性ドメイン (AD)にパブリック・サブネットとプライベート・サブネットを同居させること はできない", "E": "VCNを作成するとサブネットは自動的に必ず作成される", "F": "プライベート・サブネットに配置したインスタンスでもインターネット・ゲートウェイ (IGW)を正しく 構成すればインターネットにアクセスすることはできる   G) 「VCNウィザードの起動- インターネット接続性を持つ VCN」で自動的に作成されるゲートウェ イは、インターネット・ゲートウェイ (IGW)とダイナミック・ルーティング・ゲートウェイ (DRG)である"}, "answer": ["A", "B"], "explanation": "A) 正解です。 サブネットには、最大 5つのセキュリティ・リストを関連付けることが出来ます。 ※指定しない場合でも 、default Security List が必ず関連づきます。 B) 正解です。 サブネットに適用されているデフォルトのセキュリティ・リストにはステートフルな移 出（エグレス）ルールとして、すべてのプロトコルが許可されているので、通常はルート表の編 集だけで済む場合が多いです。 C) 誤りです。 サブネットは VCN内のコンポーネントなので、複数の VCNをまたいで構成するこ とはできません。 作成する際には、 可用性ドメイン をまたいで構成することができるリージョナ ル・サブネット 、または、可用性ドメイン固有な サブネット を作成することが できます。 より柔軟 なリージョナル・サブネットの使用をお薦めします。", "category": "ネットワーク"}, {"id": 7, "question": "VCN(10.0.0.0/16) とパブリック・サブネット (10.0.0.0/24) 、コンピュート・インスタンスを作成しました。ルー ト表は正しく設定されています。サブネットには、以下の SL(セキュリティ・リスト )が設定されています。 インスタンスには、以下の NSG(ネットワーク・セキュリティ・グループ )が設定されています。 各サービスは起動しています。正しい記述は、どれですか？(2 つ選択)", "options": {"A": "インスタンスへは、インターネットから、 SSHのみアクセスすることが出来る。", "B": "インスタンスへは、インターネットから、 HTTPのみアクセスすることが出来る。", "C": "インスタンスへは、インターネットから、 HTTPSのみアクセスすることが出来る。", "D": "インスタンスへは、インターネットから、  SSH,HTTP,HTTPS のいずれもアクセスすることが出 来る。", "E": "SL,NSGへは、許可するルールに加え、拒否するルールを書くことも出来る。", "F": "SL, NSG へは、許可するルールのみ書くことが出来る。"}, "answer": ["D", "F"], "explanation": "A) 誤りです。 他のプロトコルでも通信できます。 B) 誤りです。 他のプロトコルでも通信できます。", "category": "IAM"}, {"id": 8, "question": "コンピュート・インスタンスを作成時に、配置（容量タイプ）メニューの拡張オプションで選択できないのはどれですか？（3つ選択）", "options": {"A": "シールド（保護）・インスタンス", "B": "プリエンプティブル容量", "C": "容量予約", "D": "専用ホスト（専用VMホスト）", "E": "バースト可能インスタンス", "F": "オンデマンド容量", "G": "機密コンピューティング"}, "answer": ["A", "E", "G"], "explanation": "A) 正解（選択不可）。シールド・インスタンスはシェイプにより決まり、配置（容量タイプ）メニューでは選択できない。E) 正解（選択不可）。バースト可能インスタンスはシェイプ選択画面内で設定する。G) 正解（選択不可）。機密コンピューティングも別途セキュリティの項目で設定する。B/C/D/F はいずれも配置メニューで選択可能。", "category": "コンピュート"}, {"id": 9, "question": "OCIで高需要の Webアプリケーションが実行されてい ます。テナンシ管理者が、アプリケーションのイ ンスタンスの初期サイズが 10であるインスタンス・プールに、スケジュールベースの自動スケーリング・ ポリシーを設定しました。 Policy 1: Target pool size: 20 instances Execution time: 8:30 a.m. on every Monday through Friday, in every month, in every year Cron expression: 0 30 8 ? * MON -FRI * このポリシーの目標を的確に説明しているのはどの記述ですか？ (1つ選択 )", "options": {"A": "毎月の定期的なスケジュール。月のすべての日に、初期プール・サイズを 10インスタンスに 設定します。午前 8時30分に毎日、 20インスタンスにスケール・アウトします。", "B": "スケール・アウト・イベントが 1つのみの 1回かぎりのスケジュールです。 2021年12月31日 の午前 8:30に、インスタンス・プールを 10から20インスタンスにスケーリングします。", "C": "定期的な日次スケジュール。平日の朝午前 8時30分に、 20インスタンスにスケール・アウト します。", "D": "繰返しの週次スケジュール。週の終日午前 8:30に、プールを初期サイズの 10から20イン スタンスにスケール・アウトします。"}, "answer": ["C"], "explanation": "Cron式のフォーマットに関しては、ドキュメントを参照してください。 https://docs.oracle.com/ja -jp/iaas/Content/Compute/Tasks/autoscalinginstancepools.htm#time", "category": "IAM"}, {"id": 10, "question": "コンピュートの自動スケーリングを構成する際に、間違っているものはどれですか？(1 つ選択)", "options": {"A": "自動スケーリング構成の前に、インスタンス構成を作成しておく必要がある。", "B": "自動スケーリング構成の前に、インスタンス・プールを作成しておく必要がある。", "C": "インスタンス ・プールは、ロード ・バランサに関連付けることができる。", "D": "スケーリング・ポリシーでは、メトリックベースまたはスケジュールベースの 2つから選択す る。", "E": "メトリックベースでは、スケールアウト・ルールとスケールイン・ルールを設定する。", "F": "メトリックベースでは、指標として CPU使用率、メモリー使用率、ディスク使用率から選べる。   G) スケジュールベースでは、ターゲット・プールサイズを指定する。   H) スケジュールベースでは、 Cron値によってスケジュールを設定する。"}, "answer": ["F"], "explanation": "正しくない選択肢を選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 A) 誤り(内容は正しい )です。自動スケーリング構成の前に、インスタンス構成を作成しておく必 要があります。 B) 誤り(内容は正しい )です。自動スケーリング構成の前に、インスタンス・プールを作成しておく 必要があります。インスタンス・プールの構成の前に、インスタンス構成を作成しておく必要が あります。 自動スケーリング構成では、ドロップダウンリストで指定します。 複数のインスタン ス・プールで、同じインスタンス構成を再利用することは出来ません。また、 インスタンス・プー ルには、複数のインスタンス構成を関連付けることができ ます。インスタンス構成がインスタ ンス・プールに関連付けられていない場合にのみ、インスタンス構成を削除することが出来ま", "category": "コンピュート"}, {"id": 11, "question": "OCIのロード・バランサの説明として正しいものはどれですか？（ 3つ選択 )", "options": {"A": "バックエンド・サーバーのヘルス・チェックに失敗すると、ロード・バランサによって、そのサー バーへのトラフィック送信が停止される", "B": "ロード・バランサを機能させるには、ロード・バランサやバックエンド・サーバーが含まれるサ ブネットのセキュリティ・リストで、リスナーで開いているポートが許可されている必要がある", "C": "HTTPS接続の有無にかかわらず SSL証明書の構成は必要である", "D": "バックエンド・サーバーの「バックアップ」ステータスを trueに設定すると、バックエンド・セット 内のその他のすべてのサーバーのヘルス・チェックが失敗したときのみ、このサーバーにトラ フィックが送信されるようになる", "E": "Cookieを使用してクライアントとバックエンド・サーバーのセッションを紐づけるための「セッシ ョン持続性」設定がバックエンド・セットでは常に有効になっている", "F": "負荷分散ポリシーとして、「ラウンド・ロビン」「MAC アドレス・ハッシュ」「最大スループット」の いずれかを設定できる   G) 安全性を高めるために、パブリック・ロード・バランサをプライベート・サブネットに配置し、バッ クエンド・サーバーをパブリック・サブネットに配置することが推奨される"}, "answer": ["A", "B", "D"], "explanation": "A) 正解です。 B) 正解です。 C) 誤りです。 HTTP接続のみであれば SSL証明書の構成は不要です。", "category": "ネットワーク"}, {"id": 12, "question": "OCIのDNSサービスに関する記述で、正しいものはどれですか？（ 2つ選択 )", "options": {"A": "OCIのDNSは、プライベート DNSのみで、パブリック DNSは利用出来ない。", "B": "DNSでは、ゾーンの作成と管理を行うことが出来る。", "C": "DNSでは、レコードの作成と管理を行うことが出来ない。", "D": "OCIのDNSを利用する際には、 SR(Service Request) を上げて、申請する必要がある。", "E": "使用している既存のドメインを OCIのDNSサービスにデリゲートすることが出来る。"}, "answer": ["B", "E"], "explanation": "A) 誤りです。 OCIのDNSは、プライベート DNSとパブリック DNSの機能を持ちます。パブリック DNSは外部公開ドメインの運用や、インターネット上の公開ホストの名前解決に利用できま す。また、プライベート DNSはVCN内やオンプレミスのネットワーク内のホスト名解決に利用 できます。 B) 正解です。 DNSのUIを用いて、ゾーンの作成と管理を行うことが出来ます。", "category": "ネットワーク"}, {"id": 13, "question": "あなたは、ファイルサイズが大きい多数のグラフィックを含むアプリケーションを使用したラボ演習を設 計しています。アプリケーションにグラフィックが埋め込まれていると、アプリケーションが応答しなくなります。グラフィックを OCI Object Storage バケットにアップロードし、アプリケーション内の個々のオブジ ェクトの URL パスを追加しました。これらのグラフィックスが、長期間認証を必要とせずにアクセスでき るようにする必要があります。 これらの要件を達成するには、 どうすればよいですか？ (1つ選択)", "options": {"A": "事前認証済リクエスト (PAR)を作成し、有効期限として 00:00:0000 を指定します。", "B": "Object Storage バケットをパブリックにし、個々のオブジェクトの URLパスを使用します。", "C": "Object Storage バケットをプライベートにし、すべてのオブジェクトをパブリックにし、オブジェクト 「詳細」にある URLを使用します。", "D": "事前認証済リクエスト (PAR)を作成し、有効期限を指定しません。"}, "answer": ["B"], "explanation": "問題文のポイントは、『長期間認証を必要とせず』という条件です。 A) 誤りです。 事前認証済リクエスト (PAR)の有効期限は以下のような UIで設定するため、 00:00:0000 は指定できません。", "category": "ストレージ"}, {"id": 14, "question": "ブロック・ボリュームについての説明のうち、正しいものはどれですか？（4つ選択）", "options": {"A": "ボリュームのクローン作成時やボリュームのバックアップからのリストア時にボリューム・サイズを大きくすることができる", "B": "ブロック・ボリュームのクローンを作成できるのは、同じリージョン、可用性ドメインおよびテナンシ内のみである", "C": "ブロック・ボリュームはリージョン間でクローンを作成できる", "D": "ブロック・ボリュームは異なる可用性ドメインのインスタンスにアタッチできる", "E": "ボリューム性能は「より低いコスト」「バランス」「より高いパフォーマンス」「Ultra High Performance」の4段階から選択する", "F": "バックアップは増分バックアップ・完全バックアップどちらからでも新しいボリュームにリストアできる", "G": "ブロック・ボリュームはクロス・リージョンおよびクロスADの非同期レプリケーションをサポートする", "H": "ブロック・ボリュームは異なるADのインスタンスにもアタッチできる", "I": "ボリューム・グループにはブート・ボリュームとブロック・ボリュームの両方を含められる"}, "answer": ["A", "B", "F", "G"], "explanation": "A) 正解。クローン作成・バックアップリストア時にサイズ拡大のみ可能（縮小不可）。B) 正解。クローンは同一リージョン・AD・テナンシ内のみ。C) 誤り（クロスリージョンクローン不可）。D/H) 誤り（ブロック・ボリュームは同一ADのインスタンスにのみアタッチ可能）。F) 正解。G) 正解。クロス・リージョンとクロスADの非同期レプリケーションをサポート。", "category": "ストレージ"}, {"id": 15, "question": "ブート・ボリュームについての説明のうち正しいものはどれですか？（3 つ選択）", "options": {"A": "インスタンス終了時にブート・ボリュームを削除するオプションを未選択にすることで、ブート・ ボリュームを残すことができる", "B": "ブート・ボリュームのバックアップを作成できる", "C": "稼働中のインスタンスのブート・ボリュームをデタッチできる", "D": "インスタンスにアタッチ中のブート・ボリュームを削除できる", "E": "インスタンスにアタッチされていないブート・ボリュームを使用して別のインスタンスを作成・起 動できる", "F": "ブート・ボリュームのバックアップから新しいコンピュート・インスタンスを直接作成（起動）する ことができる   G) 一度作成するとコンパートメントを 移動する ことはできない   H) ブート・ボリュームを異なる ADにクローンできる"}, "answer": ["A", "B", "E"], "explanation": "A) 正解です。 インスタンスを終了するときに 、ブート・ボリュームを残すか どうかを決定できます。 残すがデフォルトです。 B) 正解です。 C) 誤りです。 稼働中のインスタンスのブート・ボリュームはデタッチできません。 D) 誤りです。 インスタンスにアタッチ中のブート・ボリュームは削除できません。", "category": "ストレージ"}, {"id": 16, "question": "ファイル・ストレージ・サービス(FSS) についての説明として間違っているものはどれですか？（ 3つ選択 )", "options": {"A": "様々なワークロードで NFSv3ベースの共有アクセスを提供できる", "B": "FSSのファイル・システムの暗号化はデフォルトでは無効になっている", "C": "インスタンスから FSSのマウント・ターゲットに転送中のデータはデフォルトで暗号化されてい る", "D": "FSSのマウント・ターゲットにアクセスできるインスタンスは、セキュリティ・リストやネットワー ク・セキュリティ・グループを使用して制御できる", "E": "FSSは、ファイル・アクセスの制御を UNIXユーザー・グループとパーミッションのチェックによ り実現している", "F": "スナップショットを取ると、タイムスタンプのフォルダ (例：202209182015) が作成される   G) FSSの共有ファイル・システムへのアクセスを、特定のインスタンスに対して読み取り専用に したい場合は、 NFSエクスポート・オプションを作成・編集する   H) FSSのスナップショットは、元データを残しつつ差分データのみを保管していく仕組みである   I) ユーザーは、顧客独自の Vault暗号化キーを用いて、ファイル・システムのデータを暗号化で きる  J) ファイル・システムのデータは、 同じリージョンまたは 異なるリージョンの別のファイル・システ ムにレプリケートできる。"}, "answer": ["B", "C", "F"], "explanation": "間違っている選択肢を選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 Oracle Cloud Infrastructure File Storage Service では、永続的でスケーラブルな分散型のエンタープラ イズ規模のネットワーク・ファイル・システムを提供します。仮想クラウド・ネットワーク (VCN)のベア・メタ ル、仮想マシンまたはコンテナ・インスタンスからファイル・ストレージ・サービスのファイル・システムに 接続できます。", "category": "ストレージ"}, {"id": 17, "question": "オブジェクト・ストレージ・サービスについての正しい説明はどれですか？（3 つ選択)", "options": {"A": "災害復旧(DR) 対策として、バケット単位でレプリケーション・ポリシーを設定することで、データ を別のリージョンに非同期でレプリケーションし、リージョン・レベルの障害に備えることができ る。", "B": "頻度の低いアクセス層は、アーカイブ層より低コストである", "C": "コンピュート・インスタンスに直接アタッチでき、ブロック・ストレージより高性能である。", "D": "アクセスできる期間に制限を設けて、大きなファイルを他のユーザーと共有することができ る。", "E": "バケットに保持ルール(Retention Rules) を設定することで、バケット内のオブジェクトを一定期 間、変更や削除を禁止にして保護することができる。", "F": "50GiBを超えるオブジェクトをバケットに保存することはできないため、単一のファイルで 100GiBのデータをオブジェクト・ストレージに格納する方法はない。   G) オブジェクトのバージョニングは、バケットのデフォルト設定で有効になっている。"}, "answer": ["A", "D", "E"], "explanation": "Oracle Cloud Infrastructure Object Storage サービスは、信頼性が高くコスト効率の高いデータ耐久性 を実現する、インターネット規模の高性能なストレージ・プラットフォームです。オブジェクト・ストレージ・ サービスでは、分析データ、およびイメージやビデオなどのリッチ・コンテンツを含む、あらゆるコンテンツ・タイプの非構造化データを無制限に格納できます。 オブジェクト・ストレージはリージョナル・サービ スであり、特定のコンピュート・インスタンスには結び付けられていません。アカウント作成時に、各テナントには、システムによって生成された変更不可能な一意のオブジェクト・ストレージ・ネームスペース名が1つ割り当てられます。ネームスペースは、リージョン内のすべてのコンパートメントにまたがりま す。バケット名はユーザーが制御しますが、それらのバケット名は 1つのネームスペース内で一意であ る必要があります。ネームスペースはリージョン固有ですが、ネームスペース名自体はすべてのリージョンで同じです。 Oracle Cloud Infrastructure では、ネットワ", "category": "ストレージ"}, {"id": 18, "question": "ネットワーク・パス・アナライザ (NPA) ツールの主な機能は何ですか？(1 つ選択 )", "options": {"A": "接続の問題を診断するために、ソースと宛先間の実際のトラフィックを送信する。", "B": "ネットワーク構成を収集および分析して、接続に影響する仮想ネットワーク構成の問題を特 定する。", "C": "ネットワーク・トラフィックをリアルタイムで監視し、セキュリティの脅威や不正アクセスの試みを検出する 。", "D": "トラフィック・パターンに基づいてルーティング・パスを動的に調整することでネットワーク・パフ ォーマンスを最適化する。"}, "answer": ["B"], "explanation": "ネットワーク・パス・アナライザ(NPA) は統合された直感的な機能で、接続性に影響する仮想ネットワー ク構成の問題を識別するために使用できます。 NPAは、ネットワーク構成を収集および分析して、ソー スと宛先間のパスの動作または障害を判別します。実際のトラフィックは送信されず、かわりに到達可 能性の確認のために構成が調査および使用されます。 A) 誤りです。 NPAでは、実際のトラフィックは送信されず、かわりに到達可能性の確認のために 構成が調査および使用されます。 B) 正解です。 NPAは、ルーティングおよびセキュリティ構成を慎重に調査し、定義されたトラフィ ックが横断する潜在的なネットワーク・パスと、パス内の仮想ネットワーキング・エンティティに関する情報を識別します 。 C) 誤りです。 トラフィックをリアルタイムで監視 するものではなく、構成情報を元に問題点を特定 するツールです。 D) 誤りです。ルーティングを最適化する機能はありません。", "category": "ネットワーク"}, {"id": 19, "question": "ネットワーク監視用に作成できる取得フィルタのタイプはどれですか ？（2つ選択）", "options": {"A": "VTAP取得フィルタ", "B": "フロー・ログ取得フィルタ", "C": "ネットワーク取得フィルタ", "D": "パケット取得フィルタ", "E": "フロー・コントロール取得フィルタ", "F": "トラフィック取得フィルタ"}, "answer": ["A", "B"], "explanation": "ネットワーク・コマンド・センター の「トラフィックモニタリング」には「VTAP 」と「フロー・ログ」があります。 仮想テスト・アクセス・ポイント (VTAP)は、指定された ソースから選択された ターゲット にトラフィックをミ ラー化して、トラブルシューティング、セキュリティ分析およびデータ・モニタリングを促進する方法を提 供します。 また、 VCNフロー・ログを使用してネットワーク・トラフィック情報を取得し、モニタリングとセキ ュリティのニーズをサポートします。取得フィルタを使用して、フロー・ログまたは VTAPに含めるトラフィ ックを選択します。 取得フィルタには、 「フロー・ログ 取得フィルタ 」と「VTAP取得フィルタ 」の2つのタイプを作成できます。 どちらのタイプも、パケットを含めるか除外するルールを使用します。フロー・ログ取得フィルタでは、サ ンプリング・レートも指定できます。", "category": "その他"}, {"id": 20, "question": "ブロック・ボリューム・サービス の「デタッチ済ボリューム自動チューニング」機能 について正しく説明して いるのはどれですか？ (1つ選択)", "options": {"A": "デフォルトに指定された VPUと最大 VPU/GB の間(両端を含む )でボリュームのパフォーマン スが自動的に調整される 。", "B": "機能を有効にすると 、デフォルトの VPU/GB を0または 120に設定されることを回避すること が出来る。", "C": "ブロック・ボリュームがインスタンスからデタッチされると、パフォーマンス・レベルが「より低い コスト (Lower Cost (0 VPUs/GB)) 」に自動的に 調整される ため、切り離されたボリュームのコ ストを最小限に抑えることが出来る 。", "D": "パフォーマンス・レベルが「 Ultra Higher Performance」に 自動的に 調整される ため、ディスク が持つ最高の性能を発揮することが出来る。"}, "answer": ["C"], "explanation": "ブロック・ボリュームでは、自動チューニングにより、パフォーマンスが動的にスケーリングされます。こ の機能を使用すると、サービスがパフォーマンス・レベルを自動的に調整してパフォーマンスを最適化するよう、ボリュームを構成できます。ボリュームで有効にできる自動チューニングによる動的パフォー マンス・スケーリングには、次の 2つのタイプがあります : ●パフォーマンス・ベースの自動チューニング : このオプションを有効にすると、ブロック・ボリュームで は、そのボリュームでモニターされたパフォーマンスに基づき、指定したレベルの中でボリュームのパフォーマンスが調整されます。 ●デタッチ済ボリューム自動チューニング : このオプションを有効にすると、ブロック・ボリュームでは、ボ リュームとインスタンスがアタッチされているかデタッチされているかに基づいて、ボリュームのパフォー マンス・レベルが調整されます。", "category": "ストレージ"}, {"id": 21, "question": "アイデンティティ・ドメインについて、正しい記述はどれですか？(1 つ選択 )", "options": {"A": "Default ドメインの情報は、ホームリージョンのみで利用可能である 。", "B": "作成したドメインの情報は、作成したリージョンのみで有効である。他のリージョンのリソース にアクセスするためには、ドメインのレプリケーション機能を有効にする必要がある。", "C": "Defaultドメインは、削除することが出来る。", "D": "アイデンティティ・ドメインは、ルート・コンパートメントにのみ配置することが出来る。", "E": "ポリシーは、アイデンティティ・ドメイン（ドメイン・メニュー）の構成要素に含まれる。"}, "answer": ["B"], "explanation": "アイデンティティ・ドメインとは、ユーザーとロールの管理、ユーザーのフェデレートとプロビジョニング、 Oracle Single Sign -On (SSO) 構成を使用したセキュアなアプリケーション統合、および SAML/OAuth ベースのアイデンティティ・プロバイダ管理を行うためのコンテナです。これは、 Oracle Cloud Infrastructure のユーザー人口と、それに関連付けられた構成およびセキュリティ設定(MFA など)を表 します。 A) 誤りです。 Defaultアイデンティティ・ドメインの情報は、サブスクライブしている各リージョンに 自動的に レプリケーションされます。例えば、 Defaultアイデンティティ・ドメインに登録されて いるユーザは、サブスクライブしている全てのリージョンで使用できます。 B) 正解です。新規に作成したアイデンティティ・ドメインの情報は、作成したリージョンでのみ有 効です。もし、他のリージョンのリソースにアクセスする必要がある場合には、アイデンティテ", "category": "IAM"}, {"id": 22, "question": "Webアプリケーション・アクセラレーションの機能について説明しているのはどれですか？ (1つ選択 )", "options": {"A": "キャッシュおよび圧縮技術により  HTTP ロード・バランサでのトラフィックを 高速化します。", "B": "専用ハードウェアを用いて  HTTP トラフィックの暗号化 を高速化します。", "C": "冗長性対策により  HTTP ロード・バランサの信頼性を向上します。", "D": "HTTP トラフィック・パターンを監視/ 分析し、負荷の低いサーバーにルーティングを行い応答 時間の短縮を図ります。"}, "answer": ["A"], "explanation": "Web Application Acceleration は、キャッシュと圧縮の組合せを適用することで、レイヤー 7 HTTPロー ド・バランサでトラフィックを高速化できるサービスです。この機能は、 Webアプリケーション・アクセラレ ーション・ポリシーとして構成されます。このポリシーには、キャッシュまたはキャッシュおよび圧縮が含 まれます。 Webアプリケーション・アクセラレーション・ポリシーを作成した後、ポリシーをロード・バラン サにポリシーの アクセラレーション・リソースとして割り当てます。 A) 正解です。ロード・バランサでキャッシュを有効に することで 、レイテンシを削減し、バックエン ド・サーバーでの負荷の増加を回避します。圧縮は、バックエンド・サーバーのレスポンスを圧 縮してから Webアプリケーション・ユーザーに返すことで、必要な帯域幅の量を減らします。こ の圧縮により、ネットワーク経由でのサーバー応答の転送速度が速くなります。圧縮はオプシ", "category": "ネットワーク"}, {"id": 23, "question": "DRG(ダイナミック・ルーティング・ゲートウェイ ) にアタッチすることが出来るリソースはどれですか？（3 つ選択）", "options": {"A": "ローカル VCNピアリング (LPC)", "B": "リモート VCNピアリング (RPC)", "C": "VNIC", "D": "FastConnect 仮想回線( Virtual Circuit)", "E": "サブネット", "F": "サイト間 VPN IPSec トンネル"}, "answer": ["B", "D", "F"], "explanation": "DRG(ダイナミック・ルーティング・ゲートウェイ )は、オンプレミス・ネットワークと VCN間のトラフィックの パスを提供する仮想ルーターとして機能し、 VCN間のトラフィックのルーティングにも使用できます。 様々なタイプのアタッチメントを使用して、様々なリージョンおよびテナンシのコンポーネントを使用して カスタム・ネットワーク・トポロジを構築できます。 また、 Oracle Interconnect for Azure により、 FastConnect とAzure ExpressRoute を使用すると、 OCIとMicrosoft Azure の環境間に低レイテンシ のプライベートな相互接続をシームレスに構築でき、投資収益率を最大限に拡大しながら、マルチクラ ウド環境に簡単に移行することができます。 DRGには、次のリソースをアタッチでき ます。  VCN  リモート・ピアリング接続  サイト間 VPN IPSec トンネル  FastConnect 仮想回線 A) 誤りです。 ローカル VCNピアリングは、同一リージョン内の 2つのVCNを接続し、プライベー トIPアド", "category": "ネットワーク"}, {"id": 24, "question": "オンプレミス環境と OCI環境を低レイテンシの専用ネットワーク帯域で接続したいという案件がありま す。プライマリ回線で万が一障害が発生しても、別の経路でプライベート接続が維持される可用性を持 ちつつ、全体としては可能な限り安価に運用したいと考えています。この場合、適切なアプローチはどれですか？(1 つ選択 )", "options": {"A": "動的ルーティング・ゲートウェイ (DRG)は異なる種類の接続方法を同時にサポートできないた め、オンプレミス環境に用意した 2つの顧客構内機器 (CPE)と独立した 2つのIPsec VPN 接 続を構成する。", "B": "DRGは異なる種類の接続方法を同時にサポートできないため、 FastConnect 仮想回線をプ ライマリ、セカンダリ（バックアップ）と 2回線用意する。", "C": "FastConnect 仮想回線、 IPsec VPN を1回線ずつ用意し、 1つのDRGと紐づけ、平常時は FastConnect をプライマリとして使用し、IPsec VPN 接続はバックアップ回線として使用するよ うに構成する。", "D": "FastConnect 仮想回線、 IPsec VPN を1回線ずつ用意し、 1つのDRGと紐づけ、平常時は IPsec VPN 接続をプライマリとして使用し、 FastConnect 接続はバックアップ回線として使用 するように構成する。", "E": "FastConnect 仮想回線、 IPsec VPN を1回線ずつ用意し、 2つのDRGに別々に紐づける。 各DRGは同一リージョンの異なる VCNにアタッチされているため、リモート・ピアリング接続 でVCN同士をつなぎ、障害時の代替経路を確保できるようにトランジット・ルーティングの構 成をする。"}, "answer": ["C"], "explanation": "FastConnect は、オンプレミス・ネットワークと Oracle Cloud Infrastructure との間に、専用のプライベー ト接続を提供します。IPSecVPN は、オンプレミス・ネットワークと仮想クラウド・ネットワーク (VCN)の間 にIPSec接続を提供します。 IPSec プロトコル・スイートは、パケットがソースから宛先に転送される前 にIPトラフィックを暗号化し、到着時にトラフィックを復号化します。Oracle IPSec 接続は、複数の冗長 IPSecトンネルで構成されます。特定のトンネルについて、 Border Gateway Protocol (BGP) 動的ルーテ ィングか静的ルーティングのいずれかを使用して、そのトンネルのトラフィックをルーティングできます。", "category": "ネットワーク"}, {"id": 25, "question": "DNSのトラフィック管理において、パフォーマンスを最適化するために複数のサーバーにトラフィックを 分散させたいと考えています。どのようなトラフィック管理ステアリング・ポリシーが必要ですか？(1 つ 選択)", "options": {"A": "ASNステアリング", "B": "IPプレフィックス （接頭辞） ステアリング", "C": "フェイルオーバー", "D": "ロード・バランサ", "E": "ジオロケーション・ステアリング"}, "answer": ["D"], "explanation": "DNSトラフィック管理は、エンドポイント・ヘルスおよび DNSリクエストの地理的な場所など、様々な条 件に基づいてエンドポイントへのトラフィックを制御するのに役立ちます。トラフィック管理ステアリング・ ポリシーを使用して、 DNS問合せに対するインテリジェントにレスポンスを処理します。つまり、ポリシー で定義されたロジックに応じて、問合せに対して異なる回答(エンドポイント )を返すことが可能です。 A) 誤りです。 ASNステアリング・ポリシーにより、自律システム番号(ASN) に基づいて DNSトラフ ィックを調整できます。特定の ASNまたは ASNのセットから発生した DNS問合せは、指定 のエンドポイントに渡すことができます。", "category": "IAM"}, {"id": 26, "question": "OCI IAM アイデンティティ・ドメイン においてドメインのサブ項目でないものはどれですか？(2 つ選択 )", "options": {"A": "ポリシー", "B": "管理者", "C": "コンパートメント", "D": "Microsoft Active Directory ブリッジ", "E": "グループ"}, "answer": ["A", "C"], "explanation": "アイデンティティ・ドメインとは、ユーザーとロールの管理、ユーザーのフェデレートとプロビジョニング、 Oracle Single Sign -On (SSO)構成を使用したセキュアなアプリケーション統合、および SAML/OAuth ベースのアイデンティティ・プロバイダ管理を行うためのコンテナです。これは、 Oracle Cloud Infrastructure のユーザーと、それに関連付けられた構成およびセキュリティ設定(MFA など)を表しま す。 正しくない選択肢を選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 A) 正解(内容は誤り )です。ポリシ－は、アイデンティティの項目です。 B) 誤り(内容は正しい )です。管理者は、ドメインの項目です。アイデンティティ・ドメイン内のアク セス制御に管理者ロールを利用すると、複雑なポリシーの作成が不要になるため、アクセス 管理を簡素化することが出来ます。ドメインのセキュリティに関する管理権限を、他のユーザ", "category": "IAM"}, {"id": 27, "question": "ライブ移行（マイグレーション）できないインスタンスがあります。OCI は14日から 16日以内にメンテナ ンス期日をスケジュールし、あなたに通知を送信します。期日前にインスタンスを自主的に再起動しな かった場合、何が起こりますか？ (1 つ選択)", "options": {"A": "OCIは何のアクションも取りません。", "B": "インスタンスは、再起動移行または再構築されます。", "C": "OCIはインスタンスを終了します。", "D": "OCIは、再起動するように再度通知を送信します。"}, "answer": ["B"], "explanation": "Oracle Cloud Infrastructure は、コンピュート・インスタンスの物理インフラストラクチャで定期的なデー タ・センター・メンテナンスを実行します。このメンテナンスには、ハードウェアのアップグレードと交換、 ホストへの電力供給を停止するメンテナンスの実行などのタスクが含まれます。 インスタンスをライブ移行できない場合、 Oracle Cloud Infrastructure は14～16日以内にリブートマイ グレーションの期日をスケジュールし、通知を送信します。期限までにインスタンスをプロアクティブにリブートしない場合、インスタンスはあなたに代わってリブートマイグレーションされます。 B) 正解です。インスタンスは、再起動移行されます。VM インスタンスのメンテナンスがスケジュ ールされている場合、スケジュールされたメンテナンス期日の前に、いつでもインスタンスを事前に再起動( 停止して起動)できます。事前の再起動により、アプリケーションで停止時間が 発生する方法とタイミングを制御できます。期日までにインスタンスを事前に再起動しない場 合、シェイプに応じて、インスタン", "category": "コンピュート"}, {"id": 28, "question": "VNICに関する記述で、誤っている物はどれですか？ (1つ選択 )", "options": {"A": "特定のインスタンスに、 1つ以上の  VNIC にまたがる複数のパブリック  IP アドレスを割り当て ることができる。", "B": "パブリック  IP アドレスは、エフェメラル（一時的）または 前もって予約することが 可能である。", "C": "デフォルトでは、サブネット内のインスタンスのプライマリ  VNIC には、 1 つのプライマリ・プラ イベート  IP アドレスがある。", "D": "パブリック・サブネットに存在する場合、プライベート  IP にはオプションのパブリック  IP を割り 当てることができる。", "E": "仮想マシンに対しては、 VNICを後から最大 32個まで追加することが出来る。"}, "answer": ["E"], "explanation": "Oracle Cloud Infrastructure データ・センターのサーバーには、物理ネットワーク・インタフェース・カード (NIC)があります。これらのサーバーのいずれかでインスタンスを起動すると、インスタンスは、物理 NIC に関連付けられたネットワーキング・サービスの仮想 NIC (VNIC) を使用して通信を行います。 正しくない選択肢を選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 A) 誤り(内容は正しい )です。特定のインスタンスに、 1つ以上の VNIC にまたがる複数のパブリ ック IP アドレスを割り当てることができ ます。実際の割当ては、インスタンスのプライベート IP オブジェクトに 対して行われます。 パブリック IP アドレスを割り当てるためには、 VNICがパブ リック・サブネットに存在する必要があります。 必要に応じて、 1つ以上の VNIC全体で特定の インスタンスに複数のパブリック IPを割り当てることができます。 B) 誤り(内容は正しい )です。パブリック IP アドレスは、エフェメラル（一時的）または 前もって予 約することが", "category": "ネットワーク"}, {"id": 29, "question": "カスタム・イメージに関する説明で、誤っている ものはどれですか？ (1つ選択 )", "options": {"A": "カスタム・イメージは 新しいインスタンス を作成する際の テンプレートとして使用する ことができ る。", "B": "カスタム・イメージは、 BYOI(Bring Your Own Image) をインポートして作成することが出来る。", "C": "カスタム・イメージは、 既存のインスタンスから 作成することが出来る。", "D": "カスタム・イメージには、 アタッチされたブロック・ボリュームのデータ が含まれる。", "E": "カスタム・イメージを別のリージョンに移動するには、オブジェクト・ストレージのバケットにエク スポートする必要がある。"}, "answer": ["D"], "explanation": "Oracle Cloud Infrastructure はイメージを使用してインスタンスを起動します。 インスタンスのブート・デ ィスクのカスタム・イメージを作成し、それを使用して他のインスタンスを起動することができます。イメ ージから起動するインスタンスには、カスタマイズ、構成、およびイメージの作成時にインストールされ ていたソフトウェアが含まれます。", "category": "コンピュート"}, {"id": 30, "question": "あなたはクラウドの管理者として、コンピュート・インスタンスを常に最新のカーネルに保とうと考えてい ます。このような要求に対して有効な機能は何ですか？(1 つ選択)", "options": {"A": "OS管理サービス", "B": "ネットワーク・ビジュアライザ", "C": "実行コマンド", "D": "Oracle Security Zones", "E": "ブロック・ボリューム管理", "F": "要塞  G) 脆弱性スキャン"}, "answer": ["A"], "explanation": "OS管理サービスには、コンピュート・インスタンスの一般的なオペレーティング・システム管理タスク用 のツールが用意されており、これらのツールは、まず重点的に Oracle Linux インスタンスのソフトウェ ア・パッケージの管理を行います。 OS管理サービスはエージェント・ ベース（プラグイン） のサービスで す。VMには、 Oracle Cloud エージェントにより管理される様々なプラグインが用意されています。 OS 管理サービスのほかにも、脆弱性スキャン、要塞(Bastion) 、コンピュート・インスタンスの実行コマンド、 ブロック・ボリューム管理などがあります。 A) 正解です。 OS管理サービスを使用すると、インスタンスにインストールされているパッケージ のモニター、パッケージの検索、パッケージの追加または削除、更新が使用可能になった場 合の既存のパッケージの更新を実行できます。 OS管理では、テナンシのエクスポージャのレ ベルを判定するために、個別の CVE (共通脆弱性 )を確認するための検索機能を提供しま す。 B) 誤りです。ネットワーク・ビジュアライザは、選択したリ", "category": "コンピュート"}, {"id": 31, "question": "リージョン間レイテンシ・ダッシュボード で確認できることは何ですか？(2 つ選択 )", "options": {"A": "現在のリージョン間のラウンド・トリップ時間( ミリ秒 )", "B": "過去30日間のリージョン間のラウンド・トリップ時間( ミリ秒 )", "C": "自テナンシの内でサブスクライブしている 2つのリージョン間の ラウンド・トリップ時間( ミリ秒 )", "D": "過去1年間のリージョン間のラウンド・トリップ時間 (ミリ秒 )", "E": "自テナンシ内の任意の 2つのVMインスタンス間の 1時間毎のラウンド・トリップ時間( ミリ秒 )"}, "answer": ["A", "B"], "explanation": "ダッシュボードには現在のスナップショット・ビューが表示され、最大 30日間の履歴を含む履歴スナッ プショットを参照できます。提供されるレイテンシ情報は、テナンシのワークロードに固有ではありませ ん。これらのグローバル統計は、バックアップやデータ転送などのシナリオの計画に役立つように、す べてのリージョン間のレイテンシを可視化します。このダッシュボードは、トラブルシューティングでの使 用を目的としていません。", "category": "ネットワーク"}, {"id": 32, "question": "ファイル・ストレージ・サービス(FSS) についての説明として間違っているものはどれですか？（ 1つ選択 )", "options": {"A": "クローンは、親となるファイル・システムと同じ可用性ドメインにのみ作成できます。", "B": "ファイル・システムのスナップショット をとると、現在のファイル・システムのディープ・コピーが 作成されるため、現在のデータが 2重に作成され ます。", "C": "ファイル・ストレージ・サービスは、複数のレベルのセキュリティが関連しているため、 IAM、ネ ットワーク・セキュリティ、エクスポート・オプション、 UNIXのセキュリティの各項目が正しいか どうかを確認する。", "D": "ファイル・システムはクロス・リージョンでレプリケーションすることができる。"}, "answer": ["B"], "explanation": "間違っている選択肢を選ぶ問題です。正しい選択肢を選ばないように注意しましょう。 Oracle Cloud Infrastructure File Storage Service では、永続的でスケーラブルな分散型のエンタープラ イズ規模のネットワーク・ファイル・システムを提供します。仮想クラウド・ネットワーク (VCN)のベア・メタ ル、仮想マシンまたはコンテナ・インスタンスからファイル・ストレージ・サービスのファイル・システムに 接続できます。 A) 誤り(内容は正しい )です。クローンとは、既存のファイル・システムのスナップショットに基づいて作 成された新しいファイル・システムのことです。スナップショットは、特定の時点におけるファイル・ システムのデータの状態を保持します。ファイル・システムのスナップショットを定期的に取得する と、そのライフタイムの多くの時点で存在していたファイル・システムのクローンを作成できます。 ス ナップショットは、クローンの初期ブループリントを提供します。少なくとも 1つのスナップショットが 使用可能であれば、親ファイル・システムをクローニングすることも、", "category": "ストレージ"}, {"id": 33, "question": "あるテナンシーには、以下のようなコンパートメントが作成されています。 グループ InstanceAdmin TeamX /InstanceAdimin TeamY に所属する各ユーザーは、コンパートメント B/Cのいずれでも 作業が行えるようになっています。 現在、以下のような 2つのポリシーがコンパート メント Aにアタッチされています。 Allow group InstanceAdmin TeamX , InstanceAdimin TeamY to manage instance -family in compartment B Allow group InstanceAdmin TeamX . InstanceAdimin TeamY to manage instance -family in compartment C ポリシーは、コンパートメント Aにアタッチされるものとします。 これと同様の効果となるポリシーは、次 のうちどれですか？", "options": {"A": "Allow group InstanceAdmin TeamX , InstanceAdmin TeamY  to manage instance -family  in  compartment  A", "B": "Allow group InstanceAdmin TeamX , InstanceAdmin TeamY  to manage instance -family  in  compartment  A where any { target.compartment.name='B', target.compartment.name='C'}", "C": "Allow group InstanceAdmin TeamX , InstanceAdmin TeamY  to manage instance -family  in  compartment  A   where any {     all { target.compartment.name='B', request.groups.id= [ Instance Admin TeamXのOCID] },      all { target.compartment.name='C', request.groups.id= [ InstanceAdmin TeamYのOCID] }   }", "D": "Allow group InstanceAdmin TeamX  to manage instance -family  in compartment  B, C  Allow group InstanceAdmin TeamY to manage instance -family  in compartment  B, C     Copyright© 2026, Oracle and/or its affiliates."}, "answer": ["B"], "explanation": "Identity and Access Management(IAM) のポリシーに関する問題です。ポリシーは、ルールを決めて作 成しないと、同じようなポリシーが複数存在することになり検証の複雑性やパフォーマンスに影響を及 ぼします。何に重点を置くかで、複数の記述方法が存在することになりますが、 どのような書き方が組 織にとって管理しやすいのかなどを考えて記述するようにしましょう。また、 where句を使うことで、より 細かいポリシーの設定を行うことが出来ます。 where、all、any とその組み合わせでどのような効果とな るかを押さえておきましょう。 A) 誤りです。このポリシーでは、 compartmentB/C のリソースを管理(manage) することは出来ます が、compartmentA も管理可能となってしまいます。図では、 compartmentA は管理できないこと になっています。このポリシーでは多くの権限を与えてしまっています。 B) 正解です。 このポリシーでは、「 to manage instance -family in compartment A」 に", "category": "IAM"}];
+
+// ===== STATE =====
+let state = {
+  screen: 'start',      // start | quiz | score
+  mode: 'all',          // all | wrong
+  filterCats: [],       // [] = all categories
+  queue: [],            // question indices
+  current: 0,
+  selected: [],         // currently selected option keys
+  answered: false,
+  results: [],          // {id, correct, selected, answer}
+  wrongIds: [],
+};
+
+const CAT_ICONS = {
+  'IAM': '🔐',
+  'ネットワーク': '🌐',
+  'コンピュート': '💻',
+  'ストレージ': '💾',
+  'その他': '📋',
+};
+
+const ALL_CATS = [...new Set(QUESTIONS.map(q => q.category))];
+
+// カテゴリ別問題数
+const catCounts = {};
+ALL_CATS.forEach(c => { catCounts[c] = QUESTIONS.filter(q => q.category === c).length; });
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toast(msg, duration = 1800) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+// ===== BUILD QUEUE =====
+function buildQueue() {
+  let pool = QUESTIONS.filter(q => {
+    if (state.filterCats.length > 0 && !state.filterCats.includes(q.category)) return false;
+    if (state.mode === 'wrong' && !state.wrongIds.includes(q.id)) return false;
+    return true;
+  });
+  state.queue = shuffle(pool.map(q => q.id));
+  state.current = 0;
+  state.results = [];
+  state.selected = [];
+  state.answered = false;
+}
+
+// ===== RENDER =====
+function render() {
+  const app = document.getElementById('app');
+  const prog = document.getElementById('headerProg');
+  const catBadge = document.getElementById('headerCat');
+
+  if (state.screen === 'start') {
+    prog.textContent = '';
+    catBadge.textContent = '1Z0-1072-25';
+    app.innerHTML = renderStart();
+  } else if (state.screen === 'quiz') {
+    const total = state.queue.length;
+    prog.textContent = (state.current + 1) + ' / ' + total;
+    catBadge.textContent = state.filterCats.length === 0 ? '全カテゴリ' : state.filterCats.join('・');
+    app.innerHTML = renderQuiz();
+    bindQuizEvents();
+  } else if (state.screen === 'score') {
+    prog.textContent = '';
+    catBadge.textContent = '結果';
+    app.innerHTML = renderScore();
+  }
+}
+
+// ===== START SCREEN =====
+function renderStart() {
+  const wrongCount = state.wrongIds.length;
+  let catCards = ALL_CATS.map(cat => {
+    const sel = state.filterCats.includes(cat);
+    return `<div class="cat-card${sel?' selected':''}" onclick="toggleCat('${cat}')">
+      <div class="cat-icon">${CAT_ICONS[cat]||'📋'}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-count">${catCounts[cat]}問</div>
+    </div>`;
+  }).join('');
+
+  const totalFiltered = state.filterCats.length === 0
+    ? QUESTIONS.length
+    : QUESTIONS.filter(q => state.filterCats.includes(q.category)).length;
+
+  return `<div class="start-screen">
+    <div class="start-icon">☁️</div>
+    <h1>OCI Architect Associate</h1>
+    <p>1Z0-1072-25 公式模擬問題集<br>全 ${QUESTIONS.length}問 ／ IAM・ネットワーク・コンピュート・ストレージ</p>
+
+    <div style="width:100%;max-width:640px;text-align:left;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">
+        カテゴリを選択（未選択で全カテゴリ）
+      </div>
+      <div class="cat-grid">${catCards}</div>
+    </div>
+
+    <div style="width:100%;max-width:640px;text-align:left;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">出題モード</div>
+      <div class="mode-row">
+        <button class="mode-btn${state.mode==='all'?' selected':''}" onclick="setMode('all')">🔀 シャッフル全問</button>
+        <button class="mode-btn${state.mode==='wrong'?' selected':''}" onclick="setMode('wrong')"
+          ${wrongCount===0?'disabled title="まだ不正解記録がありません"':''}>
+          ❌ 間違いのみ再挑戦${wrongCount>0?' ('+wrongCount+'問)':''}
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="font-size:16px;padding:14px 48px;"
+      onclick="startQuiz()">
+      ▶ スタート（${totalFiltered}問）
+    </button>
+  </div>`;
+}
+
+function toggleCat(cat) {
+  const idx = state.filterCats.indexOf(cat);
+  if (idx >= 0) state.filterCats.splice(idx, 1);
+  else state.filterCats.push(cat);
+  render();
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  render();
+}
+
+function startQuiz() {
+  buildQueue();
+  if (state.queue.length === 0) {
+    toast('⚠️ 該当する問題がありません'); return;
+  }
+  state.screen = 'quiz';
+  render();
+}
+
+// ===== QUIZ SCREEN =====
+function currentQuestion() {
+  return QUESTIONS.find(q => q.id === state.queue[state.current]);
+}
+
+function renderQuiz() {
+  const q = currentQuestion();
+  if (!q) return '';
+
+  const total = state.queue.length;
+  const pct = ((state.current) / total * 100).toFixed(1);
+  const opts = Object.entries(q.options);
+  const isMulti = q.answer.length > 1;
+  const hint = isMulti ? `${q.answer.length}つ選択` : '1つ選択';
+
+  let optHtml = opts.map(([key, text]) => {
+    let cls = 'opt';
+    let icon = key;
+    if (state.answered) {
+      const isCorrectKey = q.answer.includes(key);
+      const isSelected = state.selected.includes(key);
+      if (isSelected && isCorrectKey) cls += ' correct';
+      else if (isSelected && !isCorrectKey) cls += ' wrong';
+      else if (!isSelected && isCorrectKey) cls += ' answer-highlight';
+    } else {
+      if (state.selected.includes(key)) cls += ' checked';
+    }
+    return `<button class="${cls}" onclick="selectOpt('${key}')" ${state.answered?'disabled':''}>
+      <span class="opt-key">${key}</span>
+      <span class="opt-text">${esc(text)}</span>
+    </button>`;
+  }).join('');
+
+  // result badge
+  let resultHtml = '';
+  if (state.answered) {
+    const correct = q.answer.every(k => state.selected.includes(k)) && state.selected.length === q.answer.length;
+    resultHtml = correct
+      ? `<div class="result-badge ok show">✅ 正解！</div>`
+      : `<div class="result-badge ng show">❌ 不正解　正解: ${q.answer.join('・')}</div>`;
+  }
+
+  // explanation
+  const expHtml = `<div class="explanation${state.answered?' show':''}">
+    <strong>解説</strong>${esc(q.explanation)}
+  </div>`;
+
+  // action buttons
+  let actionHtml = '';
+  if (!state.answered) {
+    const canSubmit = state.selected.length > 0 && (isMulti ? state.selected.length === q.answer.length : true);
+    actionHtml = `<div class="action-row">
+      <button class="btn btn-primary" onclick="submitAnswer()" ${canSubmit?'':'disabled'}>
+        ✔ 解答する${isMulti?' ('+state.selected.length+'/'+q.answer.length+')':''}
+      </button>
+      <button class="btn btn-ghost" onclick="skipQ()">スキップ →</button>
+    </div>`;
+  } else {
+    const isLast = state.current >= total - 1;
+    actionHtml = `<div class="action-row">
+      ${isLast
+        ? `<button class="btn btn-primary" onclick="showScore()">📊 結果を見る</button>`
+        : `<button class="btn btn-primary" onclick="nextQ()">次の問題 →</button>`
+      }
+    </div>`;
+  }
+
+  return `
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">問 ${state.current + 1} / ${total}</span>
+        <span class="q-cat-tag">${CAT_ICONS[q.category]||''} ${q.category}</span>
+        <span class="q-select-hint">${hint}</span>
+      </div>
+      <div class="q-text">${esc(q.question)}</div>
+      <div class="options">${optHtml}</div>
+      ${resultHtml}
+      ${expHtml}
+      ${actionHtml}
+    </div>`;
+}
+
+function esc(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,'<br>');
+}
+
+function bindQuizEvents() { /* event delegation already handled via onclick */ }
+
+function selectOpt(key) {
+  if (state.answered) return;
+  const q = currentQuestion();
+  const isMulti = q.answer.length > 1;
+  if (isMulti) {
+    const idx = state.selected.indexOf(key);
+    if (idx >= 0) state.selected.splice(idx, 1);
+    else state.selected.push(key);
+  } else {
+    state.selected = [key];
+  }
+  render();
+}
+
+function submitAnswer() {
+  const q = currentQuestion();
+  state.answered = true;
+  const correct = q.answer.every(k => state.selected.includes(k)) && state.selected.length === q.answer.length;
+  state.results.push({ id: q.id, correct, selected: [...state.selected], answer: [...q.answer] });
+  if (!correct && !state.wrongIds.includes(q.id)) state.wrongIds.push(q.id);
+  if (correct) state.wrongIds = state.wrongIds.filter(id => id !== q.id);
+  render();
+}
+
+function skipQ() {
+  const q = currentQuestion();
+  state.results.push({ id: q.id, correct: false, selected: [], answer: [...q.answer], skipped: true });
+  if (!state.wrongIds.includes(q.id)) state.wrongIds.push(q.id);
+  nextQ();
+}
+
+function nextQ() {
+  state.current++;
+  state.selected = [];
+  state.answered = false;
+  if (state.current >= state.queue.length) showScore();
+  else render();
+}
+
+function showScore() { state.screen = 'score'; render(); }
+
+// ===== SCORE SCREEN =====
+function renderScore() {
+  const total = state.results.length;
+  const correct = state.results.filter(r => r.correct).length;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const pass = pct >= 70;
+
+  // カテゴリ別
+  let catScoreHtml = ALL_CATS.map(cat => {
+    const catQs = state.results.filter(r => {
+      const q = QUESTIONS.find(q => q.id === r.id);
+      return q && q.category === cat;
+    });
+    if (catQs.length === 0) return '';
+    const catCorrect = catQs.filter(r => r.correct).length;
+    const catPct = Math.round(catCorrect / catQs.length * 100);
+    const barColor = catPct >= 70 ? 'var(--green)' : catPct >= 50 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="cat-score-card">
+      <div class="cat-s-name">${CAT_ICONS[cat]||''} ${cat}</div>
+      <div class="cat-s-val">${catCorrect}/${catQs.length} <span style="font-size:13px;color:var(--sub)">(${catPct}%)</span></div>
+      <div class="cat-s-bar"><div class="cat-s-bar-fill" style="width:${catPct}%;background:${barColor}"></div></div>
+    </div>`;
+  }).join('');
+
+  // 不正解一覧
+  const wrongResults = state.results.filter(r => !r.correct);
+  let wrongListHtml = '';
+  if (wrongResults.length > 0) {
+    const items = wrongResults.map(r => {
+      const q = QUESTIONS.find(q => q.id === r.id);
+      const shortQ = q.question.length > 50 ? q.question.slice(0,50)+'…' : q.question;
+      return `<div class="wrong-item">
+        <span class="wi-num">問${q.id}</span>
+        <span class="wi-q">${esc(shortQ)}</span>
+      </div>`;
+    }).join('');
+    wrongListHtml = `<div class="wrong-list">
+      <h3>❌ 不正解 ${wrongResults.length}問</h3>
+      ${items}
+    </div>`;
+  }
+
+  return `<div class="score-screen">
+    <div class="score-ring ${pass?'pass':'fail'}">
+      <div class="score-pct">${pct}%</div>
+      <div class="score-label">${correct}/${total}問</div>
+    </div>
+    <h2>${pass ? '🎉 合格ライン達成！' : '📚 もう少し！'}</h2>
+    <p>正解率 ${pct}%　（合格目安: 70%以上）<br>
+    ${pass ? '素晴らしい結果です。試験に自信を持って臨みましょう！' : '不正解問題を中心に復習してもう一度挑戦しましょう。'}</p>
+
+    <div class="cat-scores">${catScoreHtml}</div>
+    ${wrongListHtml}
+
+    <div class="action-row" style="justify-content:center;margin-top:28px;gap:12px;">
+      ${wrongResults.length > 0
+        ? `<button class="btn btn-primary" onclick="retryWrong()">❌ 不正解のみ再挑戦</button>`
+        : ''
+      }
+      <button class="btn btn-secondary" onclick="goStart()">🏠 トップへ戻る</button>
+      <button class="btn btn-ghost" onclick="retryAll()">🔁 同じ設定で再挑戦</button>
+    </div>
+  </div>`;
+}
+
+function retryWrong() {
+  state.mode = 'wrong';
+  state.filterCats = [];
+  buildQueue();
+  if (state.queue.length === 0) { toast('不正解問題がありません'); return; }
+  state.screen = 'quiz';
+  render();
+}
+
+function retryAll() {
+  buildQueue();
+  state.screen = 'quiz';
+  render();
+}
+
+function goStart() {
+  state.screen = 'start';
+  render();
+}
+
+// ===== INIT =====
+render();
+</script>
+</body>
+</html>

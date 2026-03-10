@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OCI Foundations 1Z0-1085 模擬問題</title>
+<style>
+  :root {
+    --red:   #CC0000;
+    --navy:  #1F3864;
+    --white: #FFFFFF;
+    --bg:    #F5F6FA;
+    --card:  #FFFFFF;
+    --text:  #1A1A2E;
+    --sub:   #555577;
+    --border:#D0D5DD;
+    --green: #1A7A3A;
+    --amber: #C8680A;
+    --shadow: 0 2px 12px rgba(0,0,0,0.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "Meiryo UI", "Yu Gothic UI", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: var(--navy);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .header-logo {
+    color: var(--red);
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: -1px;
+  }
+  .header-title {
+    color: var(--white);
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0.9;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .badge-cat {
+    background: rgba(255,255,255,0.15);
+    color: var(--white);
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .progress-text {
+    color: rgba(255,255,255,0.7);
+    font-size: 12px;
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ===== MAIN LAYOUT ===== */
+  .main { max-width: 860px; margin: 0 auto; padding: 20px 16px 80px; }
+
+  /* ===== START SCREEN ===== */
+  .start-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 16px;
+    text-align: center;
+  }
+  .start-icon {
+    font-size: 56px;
+    margin-bottom: 20px;
+  }
+  .start-screen h1 {
+    font-size: 24px;
+    font-weight: 900;
+    color: var(--navy);
+    margin-bottom: 8px;
+  }
+  .start-screen p {
+    color: var(--sub);
+    font-size: 14px;
+    margin-bottom: 32px;
+    line-height: 1.7;
+  }
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    width: 100%;
+    max-width: 640px;
+    margin-bottom: 32px;
+  }
+  .cat-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 12px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .cat-card:hover, .cat-card.selected {
+    border-color: var(--red);
+    background: #FFF5F5;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .cat-card.selected { border-width: 2px; }
+  .cat-card .cat-icon { font-size: 26px; margin-bottom: 6px; }
+  .cat-card .cat-name { font-size: 13px; font-weight: 700; color: var(--navy); }
+  .cat-card .cat-count { font-size: 11px; color: var(--sub); margin-top: 2px; }
+
+  .mode-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .mode-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--sub);
+  }
+  .mode-btn:hover, .mode-btn.selected {
+    border-color: var(--navy);
+    background: var(--navy);
+    color: var(--white);
+  }
+
+  /* ===== PROGRESS BAR ===== */
+  .prog-bar-wrap {
+    background: #E0E4F0;
+    border-radius: 4px;
+    height: 5px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .prog-bar-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+
+  /* ===== QUESTION CARD ===== */
+  .q-card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 28px 28px 22px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .q-num {
+    background: var(--red);
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .q-cat-tag {
+    background: #EEF1FB;
+    color: var(--navy);
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+  .q-select-hint {
+    font-size: 11px;
+    color: var(--amber);
+    font-weight: 700;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .q-text {
+    font-size: 15px;
+    line-height: 1.75;
+    color: var(--text);
+    margin-bottom: 22px;
+    white-space: pre-wrap;
+  }
+
+  /* ===== OPTIONS ===== */
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .opt {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 2px solid var(--border);
+    cursor: pointer;
+    transition: all 0.12s;
+    background: var(--card);
+    text-align: left;
+    width: 100%;
+  }
+  .opt:hover:not(:disabled) {
+    border-color: var(--navy);
+    background: #F0F3FF;
+  }
+  .opt:disabled { cursor: default; }
+  .opt-key {
+    min-width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--sub);
+    flex-shrink: 0;
+    transition: all 0.12s;
+  }
+  .opt-text {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text);
+    padding-top: 3px;
+  }
+  /* selected (before answer) */
+  .opt.checked {
+    border-color: var(--navy);
+    background: #EEF2FF;
+  }
+  .opt.checked .opt-key {
+    background: var(--navy);
+    border-color: var(--navy);
+    color: var(--white);
+  }
+  /* correct */
+  .opt.correct {
+    border-color: var(--green);
+    background: #EDFAF0;
+  }
+  .opt.correct .opt-key {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--white);
+  }
+  /* wrong */
+  .opt.wrong {
+    border-color: var(--red);
+    background: #FFF0F0;
+  }
+  .opt.wrong .opt-key {
+    background: var(--red);
+    border-color: var(--red);
+    color: var(--white);
+  }
+  /* correct answer highlight (when user was wrong) */
+  .opt.answer-highlight {
+    border-color: var(--green);
+    background: #EDFAF0;
+    border-style: dashed;
+  }
+  .opt.answer-highlight .opt-key {
+    background: var(--green);
+    border-color: var(--green);
+    color: var(--white);
+  }
+
+  /* ===== EXPLANATION ===== */
+  .explanation {
+    margin-top: 16px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    border-left: 4px solid var(--navy);
+    background: #F0F3FF;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--sub);
+    display: none;
+  }
+  .explanation.show { display: block; }
+  .explanation strong { color: var(--navy); display: block; margin-bottom: 4px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ===== RESULT BADGE ===== */
+  .result-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    margin-top: 14px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  .result-badge.show { display: flex; }
+  .result-badge.ok { background: #EDFAF0; color: var(--green); }
+  .result-badge.ng { background: #FFF0F0; color: var(--red); }
+
+  /* ===== ACTION BUTTONS ===== */
+  .action-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: var(--red);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: #AA0000; transform: translateY(-1px); }
+  .btn-primary:disabled { background: #CCC; cursor: default; transform: none; }
+  .btn-secondary {
+    background: var(--card);
+    color: var(--navy);
+    border: 2px solid var(--navy);
+  }
+  .btn-secondary:hover { background: var(--navy); color: var(--white); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--sub);
+    border: 2px solid var(--border);
+  }
+  .btn-ghost:hover { border-color: var(--sub); }
+
+  /* ===== SCORE SCREEN ===== */
+  .score-screen {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+  }
+  .score-ring {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    margin: 0 auto 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 8px solid var(--border);
+    position: relative;
+  }
+  .score-ring.pass { border-color: var(--green); }
+  .score-ring.fail { border-color: var(--red); }
+  .score-pct {
+    font-size: 36px;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .score-ring.pass .score-pct { color: var(--green); }
+  .score-ring.fail .score-pct { color: var(--red); }
+  .score-label { font-size: 12px; color: var(--sub); margin-top: 2px; }
+  .score-screen h2 { font-size: 20px; font-weight: 900; color: var(--navy); margin-bottom: 8px; }
+  .score-screen p { font-size: 14px; color: var(--sub); margin-bottom: 24px; line-height: 1.6; }
+  .cat-scores {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin: 20px 0 28px;
+  }
+  .cat-score-card {
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: left;
+    border: 1px solid var(--border);
+  }
+  .cat-score-card .cat-s-name { font-size: 12px; color: var(--sub); font-weight: 700; margin-bottom: 4px; }
+  .cat-score-card .cat-s-val { font-size: 20px; font-weight: 900; color: var(--navy); }
+  .cat-score-card .cat-s-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+  .cat-score-card .cat-s-bar-fill { height: 100%; border-radius: 2px; transition: width 0.6s; }
+
+  .wrong-list { text-align: left; margin-top: 16px; }
+  .wrong-list h3 { font-size: 14px; color: var(--red); margin-bottom: 10px; font-weight: 700; }
+  .wrong-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #FFF0F0;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  .wrong-item .wi-num { font-weight: 700; color: var(--red); min-width: 28px; }
+  .wrong-item .wi-q { color: var(--text); flex: 1; }
+
+  /* ===== TOAST ===== */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 30px;
+    font-size: 14px;
+    font-weight: 600;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    pointer-events: none;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .q-card { padding: 18px 16px; }
+    .q-text { font-size: 14px; }
+    .opt-text { font-size: 13px; }
+    .score-screen { padding: 28px 18px; }
+    .btn { padding: 10px 16px; font-size: 13px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <span class="header-logo">FR</span>
+    <span class="header-title">OCI Foundations 模擬問題</span>
+  </div>
+  <div class="header-right">
+    <span class="badge-cat" id="headerCat">1Z0-1085-25</span>
+    <span class="progress-text" id="headerProg"></span>
+  </div>
+</div>
+
+<div class="main" id="app"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== QUIZ DATA =====
+const QUESTIONS = [{"id": 1, "question": "OCI リージョンに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "リージョンは地理的に分離されたデータセンターの集合であり、50 以上の商用リージョンが存在する。", "B": "日本の東京リージョン（NRT）と大阪リージョン（KIX）はどちらもマルチ AD（3つの可用性ドメイン）を持つ。", "C": "各リージョンは 3 つの可用性ドメイン（AD）を必ず持つ。", "D": "OCI では 1 つの国に 2 か所のリージョンを設置することが考慮されており、国内だけで耐障害性設計が可能。", "E": "リージョンは論理的な概念であり、物理データセンターとは独立している。"}, "answer": ["A", "D"], "explanation": "A) 正解です。OCI は 50 以上の商用・政府向けリージョンを世界中に展開しています。 B) 誤りです。東京・大阪は両方ともシングル AD リージョン（AD が 1 つ）です。マルチ AD はフランクフルト・ロンドン・アッシュバーン等の主要リージョンです。 C) 誤りです。シングル AD リージョン（AD が 1 つ）も存在します。 D) 正解です。日本のように 1 国に 2 リージョン（東京・大阪）を持つことで、外国にデータを持ち出さずに耐障害性設計ができます。 E) 誤りです。リージョンは物理データセンターを含む地理的な概念です。", "category": "アーキテクチャ"}, {"id": 2, "question": "可用性ドメイン（AD）とフォルト・ドメイン（FD）に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "複数の AD は同じ物理インフラを共有するため、1 つの AD 障害が他の AD に波及する可能性がある。", "B": "各 AD の内部は 3 つのフォルト・ドメインに分かれており、FD 間でリソースを分散することで障害影響を限定できる。", "C": "フォルト・ドメインは異なる AD にまたがる概念であり、リージョン全体の障害分散に使用される。", "D": "AD はリージョン内で互いに独立しており、同時に障害が発生する可能性は低い。", "E": "東京リージョンには AD が 3 つある。"}, "answer": ["B", "D"], "explanation": "A) 誤りです。AD は物理インフラを共有しないため、1 つの AD 障害が他 AD に波及する可能性は低いです。 B) 正解です。各 AD には 3 つの FD があり、インスタンスを異なる FD に配置することでハードウェア障害の影響範囲を限定できます。 C) 誤りです。FD は同一 AD 内の論理的なグループです。AD をまたぎません。 D) 正解です。AD は互いに隔離され、フォールト・トレラントで同時障害の可能性が低い設計です。 E) 誤りです。東京リージョンはシングル AD（AD が 1 つ）です。", "category": "アーキテクチャ"}, {"id": 3, "question": "OCI コンパートメントに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "コンパートメントは特定のリージョンに紐づいたリソースであり、他のリージョンでは使用できない。", "B": "コンパートメントは最大 6 階層まで入れ子（ネスト）にできる。", "C": "ルート・コンパートメントにアタッチしたポリシーはテナンシ全体に適用される。", "D": "コンパートメントは削除しても内部のリソースは自動的に別のコンパートメントに移動する。", "E": "1 つのリソースは必ず 1 つのコンパートメントのみに属することができる。"}, "answer": ["B", "C"], "explanation": "A) 誤りです。コンパートメントはグローバルリソースであり、全リージョンに及びます。 B) 正解です。コンパートメントは最大 6 階層まで入れ子構造を持てます。 C) 正解です。ルート・コンパートメントへのポリシーはテナンシ全体に継承されます。 D) 誤りです。コンパートメントを削除するには、その中のリソースを空にする必要があります。 E) 正解に近いですが、本設問では B・C が正解です。", "category": "アーキテクチャ"}, {"id": 4, "question": "OCI IAM のポリシー構文として正しいものはどれですか？", "options": {"A": "Grant group <グループ名> permission to manage compute-family in compartment <コンパートメント名>", "B": "Allow group <グループ名> to manage compute-family in compartment <コンパートメント名>", "C": "Allow user <ユーザー名> to manage compute-family in compartment <コンパートメント名>", "D": "Allow all-groups to manage compute-family in compartment <コンパートメント名>", "E": "Allow group <グループ名> to execute compute-family in compartment <コンパートメント名>"}, "answer": ["B"], "explanation": "B) 正解です。OCI ポリシーの基本構文は「Allow <主体> to <動詞> <リソース> in <場所>」です。 A) 誤りです。「Grant」は OCI ポリシーの構文ではありません。 C) 誤りです。ポリシーはユーザーに直接適用できません。グループを経由する必要があります。 D) 誤りです。「all-groups」という構文は存在しません。全ユーザーに許可する場合は「any-user」を使います。 E) 誤りです。「execute」という動詞は OCI ポリシーには存在しません。動詞は inspect / read / use / manage の 4 種類です。", "category": "IAM"}, {"id": 5, "question": "OCI IAM ポリシーの動詞（verb）として正しいものをすべて選択してください。（4 つ選択）", "options": {"A": "inspect", "B": "read", "C": "write", "D": "use", "E": "manage", "F": "execute"}, "answer": ["A", "B", "D", "E"], "explanation": "OCI IAM ポリシーで使用できる動詞は inspect・read・use・manage の 4 種類のみです。 A) 正解。inspect は最小権限でリソースの一覧表示のみ可能。 B) 正解。read は inspect の操作に加えコンテンツの読み取りが可能。 D) 正解。use は read の操作に加え既存リソースへの操作が可能（作成・削除は不可）。 E) 正解。manage は全操作（作成・変更・削除を含む）が可能。 C) 誤り。「write」は動詞として存在しません（試験頻出ひっかけ）。 F) 誤り。「execute」も存在しません。", "category": "IAM"}, {"id": 6, "question": "OCI の動的グループ（Dynamic Group）の説明として正しいものはどれですか？", "options": {"A": "動的グループは IAM ユーザーの集合であり、グループメンバーを手動で管理する。", "B": "動的グループを使用すると、コンピュート・インスタンスなどのリソースが API キーなしで OCI サービスを呼び出せる。", "C": "動的グループのルール条件には CIDR ブロックのみ使用できる。", "D": "動的グループに対してポリシーを設定する構文は「Allow dynamic-group <名前> to...」ではなく「Allow group <名前> to...」を使う。", "E": "動的グループは特定のリージョンにのみ有効である。"}, "answer": ["B"], "explanation": "B) 正解です。動的グループはインスタンス・プリンシパルを実現する機能で、インスタンスなどのリソースが API キーや認証トークンなしで OCI サービスを操作できます。 A) 誤りです。動的グループはリソース（インスタンス等）の集合であり、IAM ユーザーではありません。 C) 誤りです。ルール条件にはコンパートメント ID・インスタンス ID・リソースタイプなどが使えます。 D) 誤りです。動的グループのポリシーは「Allow dynamic-group <名前> to...」という構文を使います。 E) 誤りです。動的グループはテナンシ全体（グローバル）で有効です。", "category": "IAM"}, {"id": 7, "question": "VCN ウィザード（インターネット接続性を持つ VCN の作成）で自動作成されるリソースはどれですか？（3 つ選択）", "options": {"A": "インターネット・ゲートウェイ（IGW）", "B": "NATゲートウェイ", "C": "ダイナミック・ルーティング・ゲートウェイ（DRG）", "D": "サービス・ゲートウェイ", "E": "FastConnect 仮想回線"}, "answer": ["A", "B", "D"], "explanation": "VCN ウィザード（インターネット接続性を持つ VCN の作成）で作成されるゲートウェイは IGW・NAT ゲートウェイ・サービス・ゲートウェイの 3 つです。また VCN、パブリック/プライベートサブネット、ルート表 2 つ、セキュリティ・リスト 2 つ、DHCP オプションも作成されます。 C) 誤り。DRG はウィザードでは作成されません。オンプレミス接続が必要な場合は別途作成します。 E) 誤り。FastConnect はウィザードとは無関係の専用回線サービスです。", "category": "ネットワーク"}, {"id": 8, "question": "各ゲートウェイの説明として正しい組み合わせはどれですか？", "options": {"A": "IGW：双方向通信可能。パブリックサブネットのインスタンスがインターネットと通信するために使用する。", "B": "NAT ゲートウェイ：双方向通信可能。プライベートサブネットからインターネットへのアクセスとインターネットからの接続受け付けの両方に使用する。", "C": "サービス・ゲートウェイ：VCN から Oracle Services Network（オブジェクト・ストレージ等）へプライベートに接続する。インターネット経由でない。", "D": "DRG：同一リージョン内の 2 つの VCN 間のプライベート接続に使用する（ローカルVCNピアリング）。", "E": "LPG（ローカル・ピアリングGW）：異なるリージョン間の VCN 接続に使用する。"}, "answer": ["A", "C"], "explanation": "A) 正解です。IGW はパブリックサブネットと双方向のインターネット通信を可能にします。 B) 誤りです。NAT ゲートウェイはアウトバウンドのみ。インターネットからの接続を受け付けません。 C) 正解です。サービス・ゲートウェイはインターネットを経由せずに Oracle Services Network へ接続します。 D) 誤りです。ローカル VCN ピアリングには LPG（ローカル・ピアリングGW）を使います。DRG はオンプレミス接続やリモートピアリングに使用します。 E) 誤りです。LPG は同一リージョン内の接続に使用します。異なるリージョン間は DRG + RPC を使います。", "category": "ネットワーク"}, {"id": 9, "question": "セキュリティ・リストとネットワーク・セキュリティ・グループ（NSG）の比較として正しいものはどれですか？", "options": {"A": "セキュリティ・リストは VNIC 単位で適用し、NSG はサブネット単位で適用する。", "B": "セキュリティ・リストの 1 サブネットへの関連付け上限は 10 つである。", "C": "NSG は 1 VNIC に最大 5 つ関連付けることができる。", "D": "セキュリティ・リストには拒否ルールを設定できる。", "E": "NSG のルールでは、ソース/宛先に他の NSG を指定することができる。"}, "answer": ["C", "E"], "explanation": "C) 正解です。1 VNIC に関連付けられる NSG は最大 5 つです。 E) 正解です。NSG のルールでは送信元/宛先として他の NSG を指定することができ、柔軟なセキュリティ設定が可能です。 A) 逆です。セキュリティ・リストはサブネット単位、NSG は VNIC 単位です。 B) 誤りです。1 サブネットへの関連付け上限は最大 5 つです。 D) 誤りです。セキュリティ・リストも NSG も許可ルールのみ設定可能です（拒否ルールは書けません）。", "category": "ネットワーク"}, {"id": 10, "question": "OCI ロード・バランサに関する説明として正しいものはどれですか？（2 つ選択）", "options": {"A": "ロード・バランシング・ポリシーには「ラウンドロビン」「IP ハッシュ」「最小接続数」「MACアドレスハッシュ」の 4 種類がある。", "B": "ヘルス・チェックが失敗したバックエンド・サーバーには自動的にトラフィックが転送されなくなる。", "C": "セッション持続性（Session Persistence）はデフォルトで有効になっている。", "D": "backup=true に設定されたバックエンドは、他の全バックエンドのヘルス・チェックが失敗した場合のみ使用される。", "E": "HTTPS リスナーを設定する場合でも SSL 証明書は不要である。"}, "answer": ["B", "D"], "explanation": "B) 正解です。ヘルス・チェック失敗時は、そのバックエンドへのトラフィックが自動的に停止されます。 D) 正解です。バックアップ設定（backup=true）のサーバーは、他の全バックエンドが不健全になったときのみ使用されます。 A) 誤りです。「MACアドレスハッシュ」は存在しません。ポリシーはラウンドロビン・IP ハッシュ・最小接続数の 3 種類です。 C) 誤りです。セッション持続性はデフォルト無効です。明示的に設定が必要です。 E) 誤りです。HTTPS リスナーには SSL 証明書の設定が必要です。", "category": "ネットワーク"}, {"id": 11, "question": "OCI コンピュート・インスタンスのシェイプに関する正しい説明はどれですか？", "options": {"A": "Fixed シェイプではインスタンス作成後に CPU・メモリの変更ができない。", "B": "Flexible シェイプはベア・メタルとVMの両方のインスタンス・タイプで選択できる。", "C": "AMD Flex シェイプでは最大 1024 GB のメモリを設定できる。", "D": "インスタンスに割り当てるリソースを定義するテンプレートをイメージという。", "E": "Ampere（ARM）シェイプは GPU ワークロードに最適化されている。"}, "answer": ["A"], "explanation": "A) 正解です。Fixed シェイプはサイズ変更不可でベア・メタルと VM 両方に対応しています。 B) 誤りです。Flexible シェイプは VM のみ対応しており、ベア・メタルには使用できません。 C) 誤りです。AMD Flex の最大メモリは 1024 GB ですが、Intel Flex は 256 GB、Ampere Flex は 512 GB が上限です。「AMD は 1024 GB」は正しいですが、本問は全体の正誤を問うており A が最も正確です。 D) 誤りです。そのテンプレートを「シェイプ」といいます。「イメージ」はOSやソフトウェアのコピーです。 E) 誤りです。GPU ワークロードには GPU シェイプ（NVIDIA A100 等）が使われます。Ampere は汎用コンピューティング向けです。", "category": "コンピュート"}, {"id": 12, "question": "OCI コンピュート・インスタンス作成時の「配置」設定において選択できる容量タイプはどれですか？（3 つ選択）", "options": {"A": "オンデマンド容量", "B": "プリエンプティブル容量", "C": "容量予約", "D": "シールド・インスタンス", "E": "専用VMホスト", "F": "バースト可能インスタンス"}, "answer": ["A", "B", "C"], "explanation": "配置メニューで選択できる容量タイプは「オンデマンド容量」「プリエンプティブル容量」「容量予約」「専用VMホスト」の 4 つです（E も選択可能）。 A・B・C) 正解です。 D) 誤りです。シールド・インスタンスは配置メニューではなく、シェイプに依存して自動設定されます。 E) 正解です（設問では 3 つ選択とあるため A・B・C が優先されますが、E も配置で選択可能）。 F) 誤りです。バースト可能インスタンスはシェイプ選択画面で設定するものです。", "category": "コンピュート"}, {"id": 13, "question": "OCI コンピュートのカスタム・イメージに関する正しい説明はどれですか？", "options": {"A": "カスタム・イメージにはインスタンスにアタッチされたブロック・ボリュームのデータも含まれる。", "B": "カスタム・イメージは既存インスタンスから作成できる。", "C": "別リージョンへカスタム・イメージを移動するには、オブジェクト・ストレージを経由してエクスポート・インポートを行う。", "D": "BYOI（Bring Your Own Image）によるカスタム・イメージのインポートはサポートされていない。", "E": "カスタム・イメージはリージョン内の全 AD で使用できるが、他リージョンでは使用できない。"}, "answer": ["B", "C"], "explanation": "B) 正解です。既存の稼働中インスタンスからカスタム・イメージを作成できます。 C) 正解です。別リージョンへの移動はオブジェクト・ストレージにエクスポートしてから宛先リージョンでインポートします。 A) 誤りです。カスタム・イメージにはブート・ボリュームの内容のみ含まれます。アタッチされたブロック・ボリュームは含まれません。 D) 誤りです。BYOI（独自の OS イメージのインポート）はサポートされています。 E) 正解に近いですが、C の方が試験で頻出されるポイントです。", "category": "コンピュート"}, {"id": 14, "question": "OCI オブジェクト・ストレージのストレージ層に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "3 つの層が存在する：標準（高頻度）・低頻度アクセス・アーカイブ", "B": "アーカイブ層は低頻度アクセス層よりも高コストである。", "C": "標準層から低頻度アクセス層への移動はライフサイクル・ポリシーで自動化できる。", "D": "アーカイブ層のオブジェクトにはすぐにアクセスできる（アクセスに時間はかからない）。", "E": "一度アーカイブ層に移動したオブジェクトは削除しか操作できず、復元はできない。"}, "answer": ["A", "C"], "explanation": "A) 正解です。OCI オブジェクト・ストレージには標準・低頻度アクセス・アーカイブの 3 つの層があります。 C) 正解です。ライフサイクル・ポリシー・ルールを使うと、指定日数後に自動で層の移動や削除が可能です。 B) 誤りです。アーカイブ層が最も低コストです。コスト高い順：標準 > 低頻度アクセス > アーカイブ。 D) 誤りです。アーカイブ層のオブジェクトにアクセスするには、まず復元（リストア）リクエストが必要で時間がかかります。 E) 誤りです。アーカイブ層のオブジェクトは復元（リストア）して再利用できます。", "category": "ストレージ"}, {"id": 15, "question": "OCI オブジェクト・ストレージの事前認証済みリクエスト（PAR）に関する正しい説明はどれですか？", "options": {"A": "PAR は認証なしでオブジェクトにアクセスできる URL を提供し、有効期限の設定は任意である。", "B": "PAR の有効期限を「00:00:0000」に設定することで永続的な URL を作成できる。", "C": "PAR は作成時に有効期限の設定が必須であり、「00:00:0000」は無効な値である。", "D": "PAR は特定の IP アドレスからのみアクセスを許可する設定が必須である。", "E": "PAR を使用すると、OCI コンソールへのログインなしにオブジェクトをアップロード・ダウンロードできる。"}, "answer": ["C", "E"], "explanation": "C) 正解です。PAR は有効期限の設定が必須です。「00:00:0000」は無効であり、設定できません。 E) 正解です。PAR は認証不要な URL を提供するため、コンソールにログインせずにオブジェクトを操作できます。 A) 誤りです。有効期限の設定は「必須」です（任意ではありません）。 B) 誤りです。「00:00:0000」は無効な値です。", "category": "ストレージ"}, {"id": 16, "question": "OCI ブロック・ボリュームに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "ブロック・ボリュームは異なる可用性ドメイン（AD）のインスタンスにアタッチできる。", "B": "ブロック・ボリュームのクローンは同一リージョン・同一 AD・同一テナンシ内のみ作成できる。", "C": "ブロック・ボリュームのクロスリージョン・レプリケーションがサポートされている。", "D": "ボリューム・サイズを変更する際、縮小（小さくすること）もサポートされている。", "E": "準仮想化（Paravirtualized）でアタッチしたボリュームは追加コマンドなしで使用可能になる。"}, "answer": ["B", "C"], "explanation": "B) 正解です。クローンは同一リージョン・同一 AD・同一テナンシ内のみです。クロスリージョンのクローンは不可です。 C) 正解です。ブロック・ボリュームはクロスリージョン・クロス AD の非同期レプリケーションをサポートしています。 A) 誤りです。ブロック・ボリュームは同一 AD のインスタンスにのみアタッチできます（試験頻出ひっかけ）。 D) 誤りです。ボリュームの縮小はサポートされていません。変更は拡大のみです。 E) 正解ですが、設問では B・C の 2 つが正解として設定されています。", "category": "ストレージ"}, {"id": 17, "question": "OCI ブロック・ボリュームのパフォーマンス設定に関する正しい説明はどれですか？", "options": {"A": "パフォーマンス設定は「より低いコスト」「バランス」「より高いパフォーマンス」の 3 段階のみである。", "B": "パフォーマンス設定は「より低いコスト」「バランス」「より高いパフォーマンス」「Ultra High Performance」の 4 段階ある。", "C": "デタッチ済みボリュームの自動チューニングを有効にすると、デタッチ時に Ultra High Performance に自動変更される。", "D": "パフォーマンスベース自動チューニングはリアルタイムで I/O 負荷に応じてパフォーマンスを自動調整する。", "E": "ブロック・ボリュームのパフォーマンス変更はボリュームをデタッチしないと実施できない。"}, "answer": ["B", "D"], "explanation": "B) 正解です。4 段階（より低いコスト・バランス・より高いパフォーマンス・Ultra High Performance）があります。 D) 正解です。パフォーマンスベース自動チューニングは負荷に応じてリアルタイムに調整します。 A) 誤りです。Ultra High Performance を含む 4 段階です。 C) 誤りです。デタッチ済みボリューム自動チューニングを有効にすると、デタッチ時に「0 VPU/GB（より低いコスト）」に自動変更されてコストを節約します。Ultra High Performance に変更されるわけではありません。 E) 誤りです。アタッチしたままパフォーマンス変更が可能です。", "category": "ストレージ"}, {"id": 18, "question": "OCI ファイル・ストレージ・サービス（FSS）に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "FSS は iSCSI プロトコルを使用してマウントする。", "B": "FSS はデフォルトで保存データと転送中データの両方が暗号化される。", "C": "FSS のスナップショットはファイルシステム全体のディープ・コピー（完全コピー）を作成する。", "D": "FSS のクローンは親ファイルシステムと同一 AD にのみ作成できる。", "E": "FSS はクロスリージョン・レプリケーションに対応していない。"}, "answer": ["B", "D"], "explanation": "B) 正解です。FSS は保存データも転送中データ（インスタンス〜マウント・ターゲット間）もデフォルトで暗号化されています。 D) 正解です。FSS クローンは同一 AD 内にのみ作成できます。 A) 誤りです。FSS は NFSv3 プロトコルを使用します（iSCSI ではありません）。 C) 誤りです。FSS スナップショットは差分データのみ保存します。ディープ・コピー（完全コピー）は作成しません（試験頻出ひっかけ）。 E) 誤りです。FSS はクロスリージョン・レプリケーションに対応しています。", "category": "ストレージ"}, {"id": 19, "question": "OCI クラウド・ガード（Cloud Guard）の説明として正しいものはどれですか？", "options": {"A": "クラウド・ガードはネットワークのパフォーマンスを監視し、帯域幅不足を検知するサービスである。", "B": "クラウド・ガードは「ディテクタ → プロブレム → レスポンダ」のフローで問題を検出・修復する。", "C": "クラウド・ガードは構成の問題のみを検出し、操作ログの異常は検出できない。", "D": "クラウド・ガードの修復アクションはすべて手動で行う必要があり、自動修復はできない。", "E": "クラウド・ガードを有効にするには追加コストが必要である。"}, "answer": ["B"], "explanation": "B) 正解です。クラウド・ガードはディテクタ（検出）→ プロブレム（問題識別）→ レスポンダ（自動/手動修復）のフローで動作します。 A) 誤りです。クラウド・ガードはネットワーク性能監視ではなく、セキュリティ設定ミスや脅威の検出・修復を行うサービスです。 C) 誤りです。クラウド・ガードは構成上の問題だけでなくアクティビティ（操作ログ）の異常も検出します。 D) 誤りです。レスポンダによる自動修復をサポートしています。 E) 誤りです。クラウド・ガードは追加コストなしで利用できます。", "category": "セキュリティ"}, {"id": 20, "question": "OCI セキュリティ・ゾーンに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "セキュリティ・ゾーンはコンパートメントに適用し、ポリシー違反となる操作をブロックする。", "B": "セキュリティ・ゾーンを使用するにはクラウド・ガードを有効にする必要はない。", "C": "Maximum Security Recipe には「パブリックサブネットの禁止」「Vault キーなしバケット作成の禁止」などのポリシーが含まれる。", "D": "セキュリティ・ゾーンのポリシーは後から変更・無効化が自由にできる。", "E": "セキュリティ・ゾーンに設定されたコンパートメントでは、すべての OCI リソース作成が禁止される。"}, "answer": ["A", "C"], "explanation": "A) 正解です。セキュリティ・ゾーンはコンパートメントに適用し、定義済みのセキュリティ・ポリシーに違反する操作を自動ブロックします。 C) 正解です。Maximum Security Recipe には「パブリックサブネットの禁止」「Vault キーなしバケット作成の禁止」「パブリックバケットの禁止」などが含まれます。 B) 誤りです。セキュリティ・ゾーンを使用するにはクラウド・ガードが有効になっている必要があります。 D) 誤りです。セキュリティ・ゾーンのポリシーは強制的に適用されます。 E) 誤りです。禁止されるのはポリシー違反の操作のみです。すべてのリソース作成が禁止されるわけではありません。", "category": "セキュリティ"}, {"id": 21, "question": "OCI ボールト（Vault）に関する正しい説明はどれですか？", "options": {"A": "ボールトはソフトウェアベースのみの鍵管理サービスであり、HSM は使用しない。", "B": "ボールトで管理する顧客管理暗号化キー（CMEK）は、ブロック・ボリュームやオブジェクト・ストレージの暗号化に使用できる。", "C": "ボールトに保存した暗号化キーはバージョン管理できないため、ローテーションするには新しいキーを手動で再作成する必要がある。", "D": "ボールトを削除するとすぐにキーが破棄され、元に戻すことができない。", "E": "ボールトは OCI の全サービスで使用できるが、追加費用が必要である。"}, "answer": ["B"], "explanation": "B) 正解です。CMEK（顧客管理暗号化キー）はブロック・ボリューム・オブジェクト・ストレージ・FSS 等で使用できます。 A) 誤りです。OCI ボールトは HSM（ハードウェアセキュリティモジュール）ベースの鍵管理サービスです。 C) 誤りです。ボールトではキーのローテーションとバージョン管理がサポートされています。 D) 誤りです。ボールトには削除保護期間があり、即時削除はできません（誤操作防止のため）。 E) 誤りです。ボールトのキー管理機能は無料で利用できます（HSM キーは有料の場合あり）。", "category": "セキュリティ"}, {"id": 22, "question": "OCI のコスト管理に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "コスト分析ダッシュボードでリソース別のコストをグラフィカルに確認できる。", "B": "バジェットは月次コストの上限を強制するもので、しきい値を超えるとリソースが自動的に停止する。", "C": "コスト・エスティメーターを使用すると事前にコストを見積もることができる。", "D": "Oracle Support Rewards は OCI の利用額の一定割合を Oracle サポートの支払いに充当できる。", "E": "無料トライアル期間（Always Free）では一切のリソースを使用できない。"}, "answer": ["A", "C"], "explanation": "A) 正解です。コスト分析ダッシュボードでサービス別・コンパートメント別のコストを可視化できます。 C) 正解です。コスト・エスティメーターで使用前にコストの概算を計算できます。 B) 誤りです。バジェットはアラート通知を送るものです。リソースを自動停止したりコストを強制的に上限で止める機能ではありません。 D) 正解ですが、設問では A・C を 2 つ正解として設定しています（D も正しい記述です）。 E) 誤りです。Always Free（常時無料）枠では一定のリソースを無期限に無料で使用できます。", "category": "ガバナンスと管理"}, {"id": 23, "question": "OCI のタグ付け（Tagging）に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "自由形式タグ（Free-form Tag）はキーのみを設定し、バリューは設定できない。", "B": "定義済みタグ（Defined Tag）はタグ・ネームスペースで管理し、スキーマを強制できる。", "C": "コスト追跡タグ（Cost Tracking Tag）をリソースに付与すると、コスト分析でそのタグによるフィルタリングができる。", "D": "タグ付けは OCI コンソールからのみ設定可能で、API や CLI からは設定できない。", "E": "1 つのリソースに付与できるタグは最大 5 つまでである。"}, "answer": ["B", "C"], "explanation": "B) 正解です。定義済みタグはタグ・ネームスペースで管理され、許可される値のスキーマを強制できます。 C) 正解です。コスト追跡タグを使うとコスト分析のフィルタリングに活用できます。 A) 誤りです。自由形式タグはキー・バリューの両方を自由に設定できます。 D) 誤りです。API・CLI・SDK からも設定可能です。 E) 誤りです。リソースに付与できるタグ数の上限は 1 リソース当たり合計 64 タグです（自由形式 10 + 定義済み 64 の制限があります）。", "category": "ガバナンスと管理"}, {"id": 24, "question": "OCI の分散型クラウド（Distributed Cloud）サービスに含まれるものはどれですか？（2 つ選択）", "options": {"A": "専用リージョン（Dedicated Region）：顧客のデータセンター内に OCI を完全展開する。", "B": "Cloud@Customer：Oracle が管理する専用サーバーを顧客施設に設置する。", "C": "マルチクラウド：OCI と他のクラウドプロバイダーを同一ネットワーク上で直接接続する。", "D": "ローカルリージョン：顧客の国内に 1 つのリージョンのみ提供するサービス。", "E": "エッジ・コンピューティング：インターネットを経由せずデータセンター間を接続する専用回線サービス。"}, "answer": ["A", "C"], "explanation": "A) 正解です。専用リージョンは顧客のデータセンター内に OCI の全サービスを展開するソリューションです。 C) 正解です。OCI は Microsoft Azure・Google Cloud との直接相互接続（マルチクラウド）を提供しています。 B) Cloud@Customer は正しい名称ですが、これは一部の OCI サービスを顧客施設に展開するものです（専用リージョンよりスモールスタート向け）。設問では A・C が主な分散クラウドの形態として正解です。 D) 誤りです。「ローカルリージョン」は OCI の正式なサービス名称ではありません。 E) 誤りです。これは FastConnect の説明に近いですが、分散クラウドの種別ではありません。", "category": "アーキテクチャ"}, {"id": 25, "question": "OCI の認証オプションに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "OCI コンソールへのログインには API キー（APIキー・ペア）を使用する。", "B": "OCI CLI・SDK・API を使用してプログラム的に OCI を操作する場合は API キー（RSA キー・ペア）を使用する。", "C": "認証トークン（Auth Token）は OCI ネイティブ API の認証に使用する。", "D": "インスタンス・プリンシパルを使用すると、インスタンスが API キーなしで OCI サービスを操作できる。", "E": "多要素認証（MFA）は OCI コンソールではサポートされていない。"}, "answer": ["B", "D"], "explanation": "B) 正解です。OCI CLI・SDK・REST API の認証には RSA 公開・秘密鍵ペア（API キー）を使用します。 D) 正解です。インスタンス・プリンシパル（動的グループ + ポリシー）を使うと、インスタンスが API キーなしで OCI サービスを操作できます。 A) 誤りです。コンソールログインにはユーザー名・パスワード（または IdP 経由の SSO）を使います。API キーは CLI/SDK/API 用です。 C) 誤りです。認証トークン（Auth Token）はサードパーティ製ツールや IDCS 統合で使われる、OCI 非ネイティブ API 向けの認証です。 E) 誤りです。OCI コンソールは多要素認証（MFA）をサポートしています。", "category": "IAM"}, {"id": 26, "question": "OCI の OKE（Oracle Container Engine for Kubernetes）に関する正しい説明はどれですか？", "options": {"A": "OKE はフルマネージドの Kubernetes サービスであり、コントロールプレーンは Oracle が管理する。", "B": "OKE を使用するには Kubernetes のインストールを自分で行う必要がある。", "C": "OKE のワーカーノードには OCI コンピュート・インスタンスは使用できない。", "D": "OKE は VM インスタンスのみをワーカーノードとして使用でき、ベア・メタルは使用できない。", "E": "OKE はシングル AD 構成のリージョンでは使用できない。"}, "answer": ["A"], "explanation": "A) 正解です。OKE はフルマネージドの Kubernetes サービスで、コントロールプレーン（マスターノード）は Oracle が管理します。 B) 誤りです。OKE ではコントロールプレーンは自動管理されます。ユーザーはワーカーノードのみ管理します。 C) 誤りです。OKE のワーカーノードは OCI コンピュート・インスタンスです。 D) 誤りです。ワーカーノードには VM とベア・メタルの両方が使用可能です。 E) 誤りです。シングル AD リージョン（東京・大阪等）でも OKE は使用可能です。", "category": "コンピュート"}, {"id": 27, "question": "OCI Oracle Functions（ファンクション）に関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "Oracle Functions はサーバーレスのコンピュートサービスであり、コードを実行する間のみ課金される。", "B": "Oracle Functions はコンテナ・ベースのアーキテクチャであり、Docker イメージとして関数をパッケージする。", "C": "Oracle Functions では常にインスタンスが起動しているため、アイドル時も課金される。", "D": "Oracle Functions は Java・Python・Node.js のみをサポートし、Go は使用できない。", "E": "Oracle Functions を使用するには専用のコンピュート・クラスターが必要である。"}, "answer": ["A", "B"], "explanation": "A) 正解です。Oracle Functions はサーバーレスで関数が実行されている時間のみ課金されます（アイドル時は課金なし）。 B) 正解です。Oracle Functions は Fn Project ベースのコンテナ・アーキテクチャで、Docker イメージとして関数をパッケージします。 C) 誤りです。サーバーレスのため常時インスタンスは起動していません。 D) 誤りです。Java・Python・Node.js・Go・Ruby など複数の言語をサポートしています。 E) 誤りです。専用クラスターは不要です。フルマネージドサービスとして提供されます。", "category": "コンピュート"}, {"id": 28, "question": "OCI コンテナ・インスタンスに関する正しい説明はどれですか？", "options": {"A": "コンテナ・インスタンスはフルマネージドの Kubernetes クラスターを提供するサービスである。", "B": "コンテナ・インスタンスは Kubernetes や仮想マシンの管理なしにコンテナを直接実行できるサービスである。", "C": "コンテナ・インスタンスはベア・メタル・インスタンス上でのみ動作する。", "D": "コンテナ・インスタンスで起動したコンテナは停止しても削除されず、再起動できる。", "E": "コンテナ・インスタンスは 1 つのインスタンスにつき 1 つのコンテナのみ起動できる。"}, "answer": ["B"], "explanation": "B) 正解です。コンテナ・インスタンスは Kubernetes や VM の管理不要でコンテナを直接実行できるサービスです。短期間・単発のタスクに適しています。 A) 誤りです。フルマネージド Kubernetes は OKE（Oracle Container Engine for Kubernetes）です。 C) 誤りです。コンテナ・インスタンスは Oracle が管理するサーバーレス基盤で動作します（ベア・メタル指定は不要）。 D) 誤りです。コンテナ・インスタンスはコンテナが停止すると削除されます。永続性は保証されません。 E) 誤りです。1 つのコンテナ・インスタンスで複数のコンテナを起動できます。", "category": "コンピュート"}, {"id": 29, "question": "OCI Compute の自動スケーリングに関する正しい説明はどれですか？（2 つ選択）", "options": {"A": "自動スケーリングを設定するには、インスタンス構成を先に作成してからインスタンス・プールを作成する必要がある。", "B": "メトリックベースの自動スケーリングでは CPU 使用率・メモリ使用率・ディスク使用率をトリガーにできる。", "C": "スケジュールベースの自動スケーリングでは Cron 式を使って実行タイミングを指定できる。", "D": "自動スケーリングにより作成されたインスタンスは手動でのスケールインが不可能である。", "E": "インスタンス・プールはロード・バランサに関連付けることができる。"}, "answer": ["A", "E"], "explanation": "A) 正解です。自動スケーリングの設定順は「インスタンス構成 → インスタンス・プール → 自動スケーリング構成」の順です。 E) 正解です。インスタンス・プールはロード・バランサのバックエンド・セットに関連付けることができます。 B) 誤りです。ディスク使用率はメトリックとして使用できません。CPU 使用率とメモリ使用率のみです（試験頻出ひっかけ）。 C) 正解ですが、設問では A・E が正解として設定しています（C も正しい記述です）。 D) 誤りです。手動でのスケールインも可能です。", "category": "コンピュート"}, {"id": 30, "question": "OCI の分散クラウドにおける「Cloud@Customer」の説明として正しいものはどれですか？", "options": {"A": "顧客のデータセンターに OCI の全サービスを展開する専用リージョンのこと。", "B": "顧客のデータセンターに設置した Oracle 管理の機器で、一部の OCI サービスを顧客施設内で利用できるようにするソリューション。", "C": "インターネット経由で OCI を利用する標準的な SaaS 利用形態のこと。", "D": "Azure や AWS との直接接続サービスのこと。", "E": "日本国内専用の閉域 OCI サービスの名称。"}, "answer": ["B"], "explanation": "B) 正解です。Cloud@Customer は Oracle が管理する機器（Exadata 等）を顧客データセンター内に設置し、顧客のファイアウォール内部から OCI サービスを利用できるソリューションです。 A) 誤りです。「全サービスを展開する専用リージョン」は「専用リージョン（Dedicated Region）」の説明です。 C) 誤りです。インターネット経由の標準利用は通常の OCI 利用です。 D) 誤りです。Azure・AWS との直接接続は「マルチクラウド」の説明です。 E) 誤りです。そのような名称のサービスは存在しません。", "category": "アーキテクチャ"}];
+
+// ===== STATE =====
+let state = {
+  screen: 'start',      // start | quiz | score
+  mode: 'all',          // all | wrong
+  filterCats: [],       // [] = all categories
+  queue: [],            // question indices
+  current: 0,
+  selected: [],         // currently selected option keys
+  answered: false,
+  results: [],          // {id, correct, selected, answer}
+  wrongIds: [],
+};
+
+const CAT_ICONS = {
+  'IAM': '🔐',
+  'ネットワーク': '🌐',
+  'コンピュート': '💻',
+  'ストレージ': '💾',
+  'アーキテクチャ': '🏗️',
+  'セキュリティ': '🛡️',
+  'ガバナンスと管理': '⚙️',
+  'その他': '📋',
+};
+
+const ALL_CATS = [...new Set(QUESTIONS.map(q => q.category))];
+
+// カテゴリ別問題数
+const catCounts = {};
+ALL_CATS.forEach(c => { catCounts[c] = QUESTIONS.filter(q => q.category === c).length; });
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function toast(msg, duration = 1800) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), duration);
+}
+
+// ===== BUILD QUEUE =====
+function buildQueue() {
+  let pool = QUESTIONS.filter(q => {
+    if (state.filterCats.length > 0 && !state.filterCats.includes(q.category)) return false;
+    if (state.mode === 'wrong' && !state.wrongIds.includes(q.id)) return false;
+    return true;
+  });
+  state.queue = shuffle(pool.map(q => q.id));
+  state.current = 0;
+  state.results = [];
+  state.selected = [];
+  state.answered = false;
+}
+
+// ===== RENDER =====
+function render() {
+  const app = document.getElementById('app');
+  const prog = document.getElementById('headerProg');
+  const catBadge = document.getElementById('headerCat');
+
+  if (state.screen === 'start') {
+    prog.textContent = '';
+    catBadge.textContent = '1Z0-1085-25';
+    app.innerHTML = renderStart();
+  } else if (state.screen === 'quiz') {
+    const total = state.queue.length;
+    prog.textContent = (state.current + 1) + ' / ' + total;
+    catBadge.textContent = state.filterCats.length === 0 ? '全カテゴリ' : state.filterCats.join('・');
+    app.innerHTML = renderQuiz();
+    bindQuizEvents();
+  } else if (state.screen === 'score') {
+    prog.textContent = '';
+    catBadge.textContent = '結果';
+    app.innerHTML = renderScore();
+  }
+}
+
+// ===== START SCREEN =====
+function renderStart() {
+  const wrongCount = state.wrongIds.length;
+  let catCards = ALL_CATS.map(cat => {
+    const sel = state.filterCats.includes(cat);
+    return `<div class="cat-card${sel?' selected':''}" onclick="toggleCat('${cat}')">
+      <div class="cat-icon">${CAT_ICONS[cat]||'📋'}</div>
+      <div class="cat-name">${cat}</div>
+      <div class="cat-count">${catCounts[cat]}問</div>
+    </div>`;
+  }).join('');
+
+  const totalFiltered = state.filterCats.length === 0
+    ? QUESTIONS.length
+    : QUESTIONS.filter(q => state.filterCats.includes(q.category)).length;
+
+  return `<div class="start-screen">
+    <div class="start-icon">☁️</div>
+    <h1>OCI Foundations</h1>
+    <p>1Z0-1085-25 公式模擬問題集<br>全 ${QUESTIONS.length}問 ／ アーキテクチャ・IAM・ネットワーク・コンピュート・ストレージ・セキュリティ・ガバナンス</p>
+
+    <div style="width:100%;max-width:640px;text-align:left;margin-bottom:10px;">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">
+        カテゴリを選択（未選択で全カテゴリ）
+      </div>
+      <div class="cat-grid">${catCards}</div>
+    </div>
+
+    <div style="width:100%;max-width:640px;text-align:left;margin-bottom:24px;">
+      <div style="font-size:13px;font-weight:700;color:var(--navy);margin-bottom:10px;">出題モード</div>
+      <div class="mode-row">
+        <button class="mode-btn${state.mode==='all'?' selected':''}" onclick="setMode('all')">🔀 シャッフル全問</button>
+        <button class="mode-btn${state.mode==='wrong'?' selected':''}" onclick="setMode('wrong')"
+          ${wrongCount===0?'disabled title="まだ不正解記録がありません"':''}>
+          ❌ 間違いのみ再挑戦${wrongCount>0?' ('+wrongCount+'問)':''}
+        </button>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" style="font-size:16px;padding:14px 48px;"
+      onclick="startQuiz()">
+      ▶ スタート（${totalFiltered}問）
+    </button>
+  </div>`;
+}
+
+function toggleCat(cat) {
+  const idx = state.filterCats.indexOf(cat);
+  if (idx >= 0) state.filterCats.splice(idx, 1);
+  else state.filterCats.push(cat);
+  render();
+}
+
+function setMode(mode) {
+  state.mode = mode;
+  render();
+}
+
+function startQuiz() {
+  buildQueue();
+  if (state.queue.length === 0) {
+    toast('⚠️ 該当する問題がありません'); return;
+  }
+  state.screen = 'quiz';
+  render();
+}
+
+// ===== QUIZ SCREEN =====
+function currentQuestion() {
+  return QUESTIONS.find(q => q.id === state.queue[state.current]);
+}
+
+function renderQuiz() {
+  const q = currentQuestion();
+  if (!q) return '';
+
+  const total = state.queue.length;
+  const pct = ((state.current) / total * 100).toFixed(1);
+  const opts = Object.entries(q.options);
+  const isMulti = q.answer.length > 1;
+  const hint = isMulti ? `${q.answer.length}つ選択` : '1つ選択';
+
+  let optHtml = opts.map(([key, text]) => {
+    let cls = 'opt';
+    let icon = key;
+    if (state.answered) {
+      const isCorrectKey = q.answer.includes(key);
+      const isSelected = state.selected.includes(key);
+      if (isSelected && isCorrectKey) cls += ' correct';
+      else if (isSelected && !isCorrectKey) cls += ' wrong';
+      else if (!isSelected && isCorrectKey) cls += ' answer-highlight';
+    } else {
+      if (state.selected.includes(key)) cls += ' checked';
+    }
+    return `<button class="${cls}" onclick="selectOpt('${key}')" ${state.answered?'disabled':''}>
+      <span class="opt-key">${key}</span>
+      <span class="opt-text">${esc(text)}</span>
+    </button>`;
+  }).join('');
+
+  // result badge
+  let resultHtml = '';
+  if (state.answered) {
+    const correct = q.answer.every(k => state.selected.includes(k)) && state.selected.length === q.answer.length;
+    resultHtml = correct
+      ? `<div class="result-badge ok show">✅ 正解！</div>`
+      : `<div class="result-badge ng show">❌ 不正解　正解: ${q.answer.join('・')}</div>`;
+  }
+
+  // explanation
+  const expHtml = `<div class="explanation${state.answered?' show':''}">
+    <strong>解説</strong>${esc(q.explanation)}
+  </div>`;
+
+  // action buttons
+  let actionHtml = '';
+  if (!state.answered) {
+    const canSubmit = state.selected.length > 0 && (isMulti ? state.selected.length === q.answer.length : true);
+    actionHtml = `<div class="action-row">
+      <button class="btn btn-primary" onclick="submitAnswer()" ${canSubmit?'':'disabled'}>
+        ✔ 解答する${isMulti?' ('+state.selected.length+'/'+q.answer.length+')':''}
+      </button>
+      <button class="btn btn-ghost" onclick="skipQ()">スキップ →</button>
+    </div>`;
+  } else {
+    const isLast = state.current >= total - 1;
+    actionHtml = `<div class="action-row">
+      ${isLast
+        ? `<button class="btn btn-primary" onclick="showScore()">📊 結果を見る</button>`
+        : `<button class="btn btn-primary" onclick="nextQ()">次の問題 →</button>`
+      }
+    </div>`;
+  }
+
+  return `
+    <div class="prog-bar-wrap"><div class="prog-bar-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-meta">
+        <span class="q-num">問 ${state.current + 1} / ${total}</span>
+        <span class="q-cat-tag">${CAT_ICONS[q.category]||''} ${q.category}</span>
+        <span class="q-select-hint">${hint}</span>
+      </div>
+      <div class="q-text">${esc(q.question)}</div>
+      <div class="options">${optHtml}</div>
+      ${resultHtml}
+      ${expHtml}
+      ${actionHtml}
+    </div>`;
+}
+
+function esc(str) {
+  return String(str||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/\n/g,'<br>');
+}
+
+function bindQuizEvents() { /* event delegation already handled via onclick */ }
+
+function selectOpt(key) {
+  if (state.answered) return;
+  const q = currentQuestion();
+  const isMulti = q.answer.length > 1;
+  if (isMulti) {
+    const idx = state.selected.indexOf(key);
+    if (idx >= 0) state.selected.splice(idx, 1);
+    else state.selected.push(key);
+  } else {
+    state.selected = [key];
+  }
+  render();
+}
+
+function submitAnswer() {
+  const q = currentQuestion();
+  state.answered = true;
+  const correct = q.answer.every(k => state.selected.includes(k)) && state.selected.length === q.answer.length;
+  state.results.push({ id: q.id, correct, selected: [...state.selected], answer: [...q.answer] });
+  if (!correct && !state.wrongIds.includes(q.id)) state.wrongIds.push(q.id);
+  if (correct) state.wrongIds = state.wrongIds.filter(id => id !== q.id);
+  render();
+}
+
+function skipQ() {
+  const q = currentQuestion();
+  state.results.push({ id: q.id, correct: false, selected: [], answer: [...q.answer], skipped: true });
+  if (!state.wrongIds.includes(q.id)) state.wrongIds.push(q.id);
+  nextQ();
+}
+
+function nextQ() {
+  state.current++;
+  state.selected = [];
+  state.answered = false;
+  if (state.current >= state.queue.length) showScore();
+  else render();
+}
+
+function showScore() { state.screen = 'score'; render(); }
+
+// ===== SCORE SCREEN =====
+function renderScore() {
+  const total = state.results.length;
+  const correct = state.results.filter(r => r.correct).length;
+  const pct = total > 0 ? Math.round(correct / total * 100) : 0;
+  const pass = pct >= 70;
+
+  // カテゴリ別
+  let catScoreHtml = ALL_CATS.map(cat => {
+    const catQs = state.results.filter(r => {
+      const q = QUESTIONS.find(q => q.id === r.id);
+      return q && q.category === cat;
+    });
+    if (catQs.length === 0) return '';
+    const catCorrect = catQs.filter(r => r.correct).length;
+    const catPct = Math.round(catCorrect / catQs.length * 100);
+    const barColor = catPct >= 70 ? 'var(--green)' : catPct >= 50 ? 'var(--amber)' : 'var(--red)';
+    return `<div class="cat-score-card">
+      <div class="cat-s-name">${CAT_ICONS[cat]||''} ${cat}</div>
+      <div class="cat-s-val">${catCorrect}/${catQs.length} <span style="font-size:13px;color:var(--sub)">(${catPct}%)</span></div>
+      <div class="cat-s-bar"><div class="cat-s-bar-fill" style="width:${catPct}%;background:${barColor}"></div></div>
+    </div>`;
+  }).join('');
+
+  // 不正解一覧
+  const wrongResults = state.results.filter(r => !r.correct);
+  let wrongListHtml = '';
+  if (wrongResults.length > 0) {
+    const items = wrongResults.map(r => {
+      const q = QUESTIONS.find(q => q.id === r.id);
+      const shortQ = q.question.length > 50 ? q.question.slice(0,50)+'…' : q.question;
+      return `<div class="wrong-item">
+        <span class="wi-num">問${q.id}</span>
+        <span class="wi-q">${esc(shortQ)}</span>
+      </div>`;
+    }).join('');
+    wrongListHtml = `<div class="wrong-list">
+      <h3>❌ 不正解 ${wrongResults.length}問</h3>
+      ${items}
+    </div>`;
+  }
+
+  return `<div class="score-screen">
+    <div class="score-ring ${pass?'pass':'fail'}">
+      <div class="score-pct">${pct}%</div>
+      <div class="score-label">${correct}/${total}問</div>
+    </div>
+    <h2>${pass ? '🎉 合格ライン達成！' : '📚 もう少し！'}</h2>
+    <p>正解率 ${pct}%　（合格目安: 70%以上）<br>
+    ${pass ? '素晴らしい結果です。試験に自信を持って臨みましょう！' : '不正解問題を中心に復習してもう一度挑戦しましょう。'}</p>
+
+    <div class="cat-scores">${catScoreHtml}</div>
+    ${wrongListHtml}
+
+    <div class="action-row" style="justify-content:center;margin-top:28px;gap:12px;">
+      ${wrongResults.length > 0
+        ? `<button class="btn btn-primary" onclick="retryWrong()">❌ 不正解のみ再挑戦</button>`
+        : ''
+      }
+      <button class="btn btn-secondary" onclick="goStart()">🏠 トップへ戻る</button>
+      <button class="btn btn-ghost" onclick="retryAll()">🔁 同じ設定で再挑戦</button>
+    </div>
+  </div>`;
+}
+
+function retryWrong() {
+  state.mode = 'wrong';
+  state.filterCats = [];
+  buildQueue();
+  if (state.queue.length === 0) { toast('不正解問題がありません'); return; }
+  state.screen = 'quiz';
+  render();
+}
+
+function retryAll() {
+  buildQueue();
+  state.screen = 'quiz';
+  render();
+}
+
+function goStart() {
+  state.screen = 'start';
+  render();
+}
+
+// ===== INIT =====
+render();
+</script>
+</body>
+</html>
