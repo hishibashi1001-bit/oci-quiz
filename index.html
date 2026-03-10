@@ -225,28 +225,13 @@
   }
   .card-cta:hover { background: #2d4f9e; }
   .card-cta.red-btn { background: var(--red); }
-  .card-cta.red-btn:hover { background: #a80000; }
-
-  /* ── Vol.1 section ── */
-  .divider {
+  .card-cta.red-btn:hover { background: #a80000; }  .divider {
     height: 1px;
     background: var(--border);
     margin: 8px 0 32px;
   }
-  .vol1-cards .card {
-    opacity: .85;
-  }
-  .vol1-badge {
-    display: inline-block;
-    background: var(--gray);
-    border: 1px solid var(--border);
-    color: var(--mid);
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 8px;
-    border-radius: 4px;
-    margin-bottom: 6px;
-  }
+  
+  
 
   /* ── Footer ── */
   footer {
@@ -259,23 +244,31 @@
   }
   footer a { color: rgba(255,255,255,.7); }
 </style>
-</head>
-<body>
+
 <script>
 (function(){
   var PASS = 'futurerays';
-  var KEY = 'oci_quiz_auth';
+  var KEY = 'fr_oci_v2_' + location.pathname;
   if(sessionStorage.getItem(KEY) !== '1'){
-    var ok = false;
-    while(!ok){
-      var input = prompt('🔐 FutureRays社内用\nパスワードを入力してください');
-      if(input === null){ document.body.innerHTML=''; break; }
-      if(input === PASS){ sessionStorage.setItem(KEY,'1'); ok=true; }
-      else{ alert('パスワードが違います'); }
+    var entered = false;
+    while(!entered){
+      var input = window.prompt('\uD83D\uDD10 FutureRays社内用\nパスワードを入力してください');
+      if(input === PASS){
+        sessionStorage.setItem(KEY,'1');
+        entered = true;
+      } else {
+        // キャンセルでも間違いでも必ずループ継続
+        document.body.style.display = 'none';
+        window.alert('パスワードが違います。再入力してください。');
+      }
     }
+    document.body.style.display = '';
   }
 })();
 </script>
+</head>
+<body>
+
 
 <header>
   <div class="logo">FR<span>｜OCI Quiz</span></div>
@@ -335,6 +328,10 @@
       </div>
     </a>
   </div>
+
+  
+
+</div>
 
 <footer>
   OCI 模擬問題集 Vol.2 ／ 石橋 英樹（FutureRays）<br>
