@@ -259,8 +259,6 @@
   }
   footer a { color: rgba(255,255,255,.7); }
 </style>
-</head>
-<body>
 <script>
 (function(){
   var PASS = 'futurerays';
@@ -268,14 +266,17 @@
   if(sessionStorage.getItem(KEY) !== '1'){
     var ok = false;
     while(!ok){
-      var input = prompt('🔐 FutureRays社内用\nパスワードを入力してください');
-      if(input === null){ document.body.innerHTML=''; break; }
+      var input = window.prompt('\uD83D\uDD10 FutureRays社内用\nパスワードを入力してください');
+      if(input === null){ document.body.innerHTML='<h2 style=text-align:center;margin-top:40vh>アクセスが拒否されました</h2>'; break; }
       if(input === PASS){ sessionStorage.setItem(KEY,'1'); ok=true; }
-      else{ alert('パスワードが違います'); }
+      else{ window.alert('パスワードが違います。再入力してください。'); }
     }
   }
 })();
 </script>
+</head>
+<body>
+
 
 <header>
   <div class="logo">FR<span>｜OCI Quiz</span></div>
