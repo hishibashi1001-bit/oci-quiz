@@ -261,6 +261,21 @@
 </style>
 </head>
 <body>
+<script>
+(function(){
+  var PASS = 'futurerays';
+  var KEY = 'oci_quiz_auth';
+  if(sessionStorage.getItem(KEY) !== '1'){
+    var ok = false;
+    while(!ok){
+      var input = prompt('🔐 FutureRays社内用\nパスワードを入力してください');
+      if(input === null){ document.body.innerHTML=''; break; }
+      if(input === PASS){ sessionStorage.setItem(KEY,'1'); ok=true; }
+      else{ alert('パスワードが違います'); }
+    }
+  }
+})();
+</script>
 
 <header>
   <div class="logo">FR<span>｜OCI Quiz</span></div>
